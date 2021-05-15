@@ -1,4 +1,4 @@
-package com.mountain.POJO;
+package com.mountain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TrafficSettings {
+public class InitPro {
     private int zoom;
     private Double centerLat;
     private Double centerLng;
@@ -18,6 +18,5 @@ public class TrafficSettings {
 //    终止点
     private Double endPlat;
     private Double endPlng;
-
 
 }

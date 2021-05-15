@@ -1,19 +1,17 @@
 package com.mountain.controller;
 
-import com.mountain.POJO.TrafficSettings;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.mountain.entity.InitPro;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
+@RequestMapping("/def")
 public class SettingGetController {
 //    从服务器端获取参数值
     @GetMapping("/getset")
-    public TrafficSettings trafficSetting(){
-        TrafficSettings setting = new TrafficSettings(17,
+    public InitPro trafficSetting(){
+        InitPro setting = new InitPro(17,
                 121.50717,31.027809,
                 121.506737,31.028632,
                 121.506976,31.036238);
@@ -28,7 +26,7 @@ public class SettingGetController {
         params.get("StartPlng");
         params.get("endPlat");
         params.get("endPlng");
-        TrafficSettings postSetting=new TrafficSettings();
+        InitPro postSetting=new InitPro();
         return params;
 
     }
