@@ -2,16 +2,20 @@ package com.mountain.controller;
 
 import com.mountain.entity.InitPro;
 import com.mountain.entity.Location;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Locale;
 import java.util.Map;
 
+@Api("获取初始化参数以及更新初始化参数")
 @RestController
 @RequestMapping("/def")
+
 public class SettingGetController {
 //    从服务器端获取参数值
     @GetMapping("/init")
+    @ApiOperation("获取初始化参数")
     public InitPro trafficSetting(){
 //        初始化参数设置
         InitPro setting = new InitPro();
@@ -23,6 +27,7 @@ public class SettingGetController {
         return setting;
     }
     @PostMapping("/init")
+    @ApiOperation("使用自定义参数")
     public InitPro PostMethod(@RequestBody InitPro initPro){
 //        上传自定义参数设置
         return initPro;
