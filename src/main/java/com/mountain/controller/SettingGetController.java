@@ -1,8 +1,10 @@
 package com.mountain.controller;
 
 import com.mountain.entity.InitPro;
+import com.mountain.entity.Location;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Locale;
 import java.util.Map;
 
 @RestController
@@ -12,18 +14,18 @@ public class SettingGetController {
     @GetMapping("/init")
     public InitPro trafficSetting(){
 //        初始化参数设置
-//        InitPro setting = new InitPro(17,
-//                121.50717,31.027809,
-//                121.506737,31.028632,
-//                121.506976,31.036238,
-//                10);
         InitPro setting = new InitPro();
-        setting.setCenterLat(121.50717);
-        setting.setCenterLng(31.027809);
-        setting.getStartPoint();
-//        setting.setStartPoint(30.032,362.0251);
-//        setting.set_("30.032","362.0251");
+        setting.setZoom(17);
+        setting.setCenterPoint(new Location("121.50717","31.027809"));
+        setting.setStartPoint(new Location("121.506737","31.028632"));
+        setting.setEndPoint(new Location("121.506976","31.036238"));
+        setting.setWaitPeople(10);
         return setting;
+    }
+    @PostMapping("/init")
+    public InitPro PostMethod(@RequestBody InitPro initPro){
+//        上传自定义参数设置
+        return initPro;
     }
     @Deprecated
     @PostMapping("/postset")
@@ -39,9 +41,5 @@ public class SettingGetController {
         InitPro postSetting=new InitPro();
         return params;
     }
-    @PostMapping("/init")
-    public InitPro PostMethod(@RequestBody InitPro initPro){
-//        更新参数设置
-        return initPro;
-    }
+
 }
