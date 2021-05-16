@@ -37,6 +37,5 @@ public class SettingGetController {
     public InitPro PostMethod(@RequestBody InitPro initPro){
 //        更新参数设置
         return initPro;
-
     }
 }
