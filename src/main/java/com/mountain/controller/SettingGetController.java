@@ -27,7 +27,7 @@ public class SettingGetController {
         return setting;
     }
     @PostMapping("/init")
-    @ApiOperation("使用自定义参数")
+    @ApiOperation("更新自定义参数")
     public InitPro PostMethod(@RequestBody InitPro initPro){
 //        上传自定义参数设置
         return initPro;
