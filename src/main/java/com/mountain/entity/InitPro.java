@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InitPro {
     private int zoom;
+    private Location startPoint;
     private Double centerLat;
     private Double centerLng;
 //    起始点

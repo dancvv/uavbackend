@@ -12,11 +12,15 @@ public class SettingGetController {
     @GetMapping("/init")
     public InitPro trafficSetting(){
 //        初始化参数设置
-        InitPro setting = new InitPro(17,
-                121.50717,31.027809,
-                121.506737,31.028632,
-                121.506976,31.036238,
-                10);
+//        InitPro setting = new InitPro(17,
+//                121.50717,31.027809,
+//                121.506737,31.028632,
+//                121.506976,31.036238,
+//                10);
+        InitPro setting = new InitPro();
+        setting.setCenterLat(121.50717);
+        setting.setCenterLng(31.027809);
+        setting.setStartPoint(30.032,362.0251);
         return setting;
     }
     @Deprecated
