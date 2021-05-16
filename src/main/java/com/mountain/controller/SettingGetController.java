@@ -20,7 +20,9 @@ public class SettingGetController {
         InitPro setting = new InitPro();
         setting.setCenterLat(121.50717);
         setting.setCenterLng(31.027809);
-        setting.setStartPoint(30.032,362.0251);
+        setting.getStartPoint();
+//        setting.setStartPoint(30.032,362.0251);
+//        setting.set_("30.032","362.0251");
         return setting;
     }
     @Deprecated

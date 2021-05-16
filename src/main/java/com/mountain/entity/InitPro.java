@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class InitPro {
     private int zoom;
     private Location startPoint;
+
     private Double centerLat;
     private Double centerLng;
 //    起始点
@@ -21,5 +22,10 @@ public class InitPro {
     private Double endPlng;
 
     private int waitPeople;
+//    public  void set_(String lat,String lng){
+//        this.startPoint.setLat(lat);
+//        this.startPoint.setLng(lng);
+//
+//    }
 
 }
