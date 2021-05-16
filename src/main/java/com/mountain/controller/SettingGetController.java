@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@Api("获取初始化参数以及更新初始化参数")
+@Api(tags= {"地图初始化设置"})
 @RestController
 @RequestMapping("/def")
 
