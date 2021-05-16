@@ -9,14 +9,17 @@ import java.util.Map;
 @RequestMapping("/def")
 public class SettingGetController {
 //    从服务器端获取参数值
-    @GetMapping("/getset")
+    @GetMapping("/init")
     public InitPro trafficSetting(){
+//        初始化参数设置
         InitPro setting = new InitPro(17,
                 121.50717,31.027809,
                 121.506737,31.028632,
-                121.506976,31.036238);
+                121.506976,31.036238,
+                10);
         return setting;
     }
+    @Deprecated
     @PostMapping("/postset")
     public Map<String,Object> PostSet(@RequestBody Map<String,Object> params){
         params.get("zoom");
@@ -26,8 +29,14 @@ public class SettingGetController {
         params.get("StartPlng");
         params.get("endPlat");
         params.get("endPlng");
+        params.get("waitPeople");
         InitPro postSetting=new InitPro();
         return params;
+    }
+    @PostMapping("/init")
+    public InitPro PostMethod(@RequestBody InitPro initPro){
+//        更新参数设置
+        return initPro;
 
     }
 }

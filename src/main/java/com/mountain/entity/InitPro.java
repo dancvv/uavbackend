@@ -19,4 +19,6 @@ public class InitPro {
     private Double endPlat;
     private Double endPlng;
 
+    private int waitPeople;
+
 }
