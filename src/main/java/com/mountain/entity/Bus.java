@@ -1,5 +1,6 @@
 package com.mountain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Bus {
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
     private int busID;
 //    公交实时位置
