@@ -10,10 +10,14 @@ import lombok.NoArgsConstructor;
 public class BusCompany {
 //    运行期间车上的人数
     private int PassengerInBus;
+//    车站等车的人数
+    private int PassengerWaitInStation;
+//    每个乘客的平均路长
+    private double AveRoutePassengerLength;
 //    平均路长
-    private Double AverageRoute;
+    private double AverageRoute;
 //    总路长
-    private Double TotalRoute;
+    private double TotalRoute;
 //    运行中的BUS
     private int RunningBus;
 //    可用的BUS
@@ -21,3 +25,5 @@ public class BusCompany {
 //    现有的BUS
     private int ExistingBus;
 }
+
+// station
