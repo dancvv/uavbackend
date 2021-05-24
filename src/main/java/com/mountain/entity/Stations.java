@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//存储站点名称
+//存储各个站点信息
 public class Stations {
     private int id;
     private String stationName;
-    private Location StationLocation;
+    private Location stationLocation;
 }

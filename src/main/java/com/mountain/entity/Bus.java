@@ -1,10 +1,14 @@
 package com.mountain.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Bus {
     private Date date;
     private int busID;
@@ -18,7 +22,11 @@ public class Bus {
     private int passengerLeaveNextStation;
 //    公交座位数
     private int seat;
-//    车辆中的路线
-    private String route;
+//    下一站
+    private Stations nextStation;
+//    上一站
+    private Stations lastStation;
+//    需要传入路线，路线以声明样的形式存储，存疑
+
 
 }
