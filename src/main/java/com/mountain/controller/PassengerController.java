@@ -18,6 +18,7 @@ public class PassengerController {
         PassengerQOS QOS = new PassengerQOS();
         QOS.setAveWaitTime(10.0);
         QOS.setMaxWaitTime(30.0);
+        QOS.setAvePassengerRouteLength(30.2);
         return QOS;
     }
     @PostMapping("/passenger")

@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PassengerQOS {
-    private Double AveWaitTime;
-    private Double MaxWaitTime;
-    private Double AvePassengerRouteLength;
-
+//存储站点名称
+public class Stations {
+    private int id;
+    private String stationName;
+    private Location StationLocation;
 }
