@@ -33,6 +33,7 @@ public class BusController {
     @GetMapping("/businfo")
     public Collection<Bus> busInfo(){
         Collection<Bus> busInform = busDAO.getAll();
+        final String UI= "FEFE";
         return busInform;
     }
 }
