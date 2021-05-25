@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 @Data
@@ -29,6 +31,7 @@ public class Bus {
 //    上一站
     private Stations lastStation;
 //    需要传入路线，路线以声明样的形式存储，存疑
+//    Collection RouteLine = new ArrayList();
 
 
 }
