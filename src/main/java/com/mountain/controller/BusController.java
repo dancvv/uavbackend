@@ -18,16 +18,19 @@ public class BusController {
 //    @Autowired
 //    RouteDAO routeDAO;
     BusDAO bs = new BusDAO();
+//    通过ID查找车次
     @GetMapping("/getbus/{id}")
     public Bus GetBus(@PathVariable("id") Integer id){
-        Bus setBus=new Bus();
-        return setBus;
+//        Bus setBus=new Bus();
+        Bus busInfo=busDAO.getBusbyId(id);
+        return busInfo;
     }
     @PostMapping("/postbus")
     public Bus PostBus(@RequestBody Bus setBus){
         return setBus;
     }
     @GetMapping("/businfo")
+//    返回公交车的所有信息
     public Collection<Bus> busInfo(){
         return busDAO.getAll();
     }
