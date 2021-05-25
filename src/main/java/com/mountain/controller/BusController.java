@@ -6,10 +6,7 @@ import com.mountain.entity.Bus;
 import com.mountain.entity.Location;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -21,8 +18,8 @@ public class BusController {
 //    @Autowired
 //    RouteDAO routeDAO;
     BusDAO bs = new BusDAO();
-    @GetMapping("/getbus")
-    public Bus GetBus(){
+    @GetMapping("/getbus/{id}")
+    public Bus GetBus(@PathVariable("id") Integer id){
         Bus setBus=new Bus();
         return setBus;
     }
@@ -32,8 +29,6 @@ public class BusController {
     }
     @GetMapping("/businfo")
     public Collection<Bus> busInfo(){
-        Collection<Bus> busInform = busDAO.getAll();
-        final String UI= "FEFE";
-        return busInform;
+        return busDAO.getAll();
     }
 }
