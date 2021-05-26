@@ -20,9 +20,9 @@ public class SettingGetController {
 //        初始化参数设置
         InitPro setting = new InitPro();
         setting.setZoom(17);
-        setting.setCenterPoint(new Location("121.50717","31.027809"));
-        setting.setStartPoint(new Location("121.506737","31.028632"));
-        setting.setEndPoint(new Location("121.506976","31.036238"));
+        setting.setCenterPoint(new Location(121.50717,31.027809));
+        setting.setStartPoint(new Location(121.506737,31.028632));
+        setting.setEndPoint(new Location(121.506976,31.036238));
         setting.setWaitPeople(10);
         return setting;
     }
