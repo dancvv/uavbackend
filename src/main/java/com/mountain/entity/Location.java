@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Location {
 //    存储地理位置经纬度
-    public  String lat;
-    private String lng;
+    public  double lat;
+    private double lng;
 }
