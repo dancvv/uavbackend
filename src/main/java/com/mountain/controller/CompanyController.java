@@ -18,7 +18,7 @@ public class CompanyController {
         operating.setExistingBus(5);
         operating.setAverageRoute(25.0);
         operating.setRunningBus(20);
-        operating.setPassengerInBus(10);
+//        operating.setPassengerInBus(10);
         return operating;
     }
     @PostMapping("/bus")

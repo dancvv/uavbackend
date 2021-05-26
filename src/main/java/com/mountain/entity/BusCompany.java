@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BusCompany {
 //    运行期间车上的人数
-    private int PassengerInBus;
+//    private int PassengerInBus;
 //    车站等车的人数
-    private int PassengerWaitInStation;
+//    private int PassengerWaitInStation;
 //    每个乘客的平均路长
     private double AveRoutePassengerLength;
 //    平均路长

@@ -10,6 +10,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RouteLines<T> {
-    Collection<T> routeSet = new ArrayList<>();
+    private Collection<T> routeSet;
+
     ArrayList<Integer> routeLine = new ArrayList<>();
 }
