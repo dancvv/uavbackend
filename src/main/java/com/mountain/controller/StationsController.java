@@ -18,11 +18,12 @@ public class StationsController {
     StationsDAO stationDao;
     @GetMapping("/station")
     public Collection<Stations> GetStation(){
-//        获取各个车站信息
+//        获取所有车站信息
         return stationDao.getStation();
     }
     @GetMapping("/station/{id}")
     public Stations GetStationID(@RequestParam("id") Integer id){
+//        通过ID获取车站信息
         return stationDao.getStationById(id);
     }
     @PostMapping("/station")
