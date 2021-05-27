@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //存储各个站点信息
 public class Stations {
-    private int id;
+    private int stationId;
     private String stationName;
     private Location stationLocation;
 }
