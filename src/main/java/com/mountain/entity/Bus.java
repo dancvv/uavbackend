@@ -14,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class Bus {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+
     private Date date;
     private int busID;
 //    公交实时位置

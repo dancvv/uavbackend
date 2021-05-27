@@ -15,16 +15,14 @@ import java.util.Collection;
 public class BusController {
     @Autowired
     BusDAO busDAO;
-//    @Autowired
-//    RouteDAO routeDAO;
-    BusDAO bs = new BusDAO();
+
 //    通过ID查找车次
     @GetMapping("/getbus/{id}")
     public Bus GetBus(@PathVariable("id") Integer id){
         Bus busInfo=busDAO.getBusbyId(id);
 //        return busDAO.getBusbyId(id);
         return busInfo;
-//        return busInfo;
+
     }
     @PostMapping("/postbus")
     public Bus PostBus(@RequestBody Bus setBus){
