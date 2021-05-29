@@ -9,8 +9,7 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RouteLines<T> {
-    private Collection<T> routeSet;
-
-    ArrayList<Integer> routeLine = new ArrayList<>();
+public class RouteLines {
+    private Collection routeSet;
+    ArrayList<Integer> routeLine;
 }
