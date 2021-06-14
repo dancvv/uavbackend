@@ -19,7 +19,7 @@ public class jdbcOrderRepository implements OrderRepository{
 
     @Override
     public Iterable<Order> findAll() {
-        return jdbc.query("select * from orderdata limit 0,20", new mapRowToOrder());
+        return jdbc.query("select * from orderdata limit 0,20",this::mapRowToOrder);
     }
 
     @Override
@@ -27,10 +27,18 @@ public class jdbcOrderRepository implements OrderRepository{
         return null;
     }
     private Order mapRowToOrder(ResultSet rs,int rowNum) throws SQLException {
+//                此处需要返回所有的order数据不然报错
         return new Order(
-                rs.getString("id");
-                rs.getString("passenger_id");
-                rs.getString("date");
+                rs.getInt("id"),
+                rs.getString("passenger_id"),
+                rs.getDate("date"),
+                rs.getDate("create_time"),
+                rs.getDate("check_ticket_time"),
+                rs.getInt("up_stop_id"),
+                rs.getInt("down_stop_id"),
+                rs.getInt("ride_count"),
+                rs.getString("small_vehicle_id"),
+                rs.getString("car_id")
         );
     }
 }

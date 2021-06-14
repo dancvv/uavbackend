@@ -10,8 +10,8 @@ public class RouteDAO {
 
     //类数组，数组里的每一个元素 是一个类的实例
     public void getroute(){
-        RouteLines routeLines = new RouteLines();
-
+//        RouteLines routeLines = new RouteLines();
+//
 //        List<int> route = new ArrayList<>();
 //
 //        it = DB.query();

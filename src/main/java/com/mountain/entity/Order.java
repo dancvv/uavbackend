@@ -1,11 +1,15 @@
 package com.mountain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     private int id;
     private String passenger_id;
@@ -20,4 +24,5 @@ public class Order {
     private int ride_count;
     private String small_vehicle_id;
     private String car_id;
+
 }

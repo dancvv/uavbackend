@@ -12,6 +12,5 @@ public class StationInfoDao {
     private static Map<Integer, StationInfo> stationInfoMap;
     static {
         stationInfoMap=new HashMap<>();
-
     }
 }
