@@ -8,6 +8,7 @@ import java.util.List;
 public interface searchService {
     void insertCustom(Order order);
     Order selectByDate(Date date);
+    Order selectById(Integer id);
     List<Order> selectOrderList();
 
 }

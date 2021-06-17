@@ -21,6 +21,11 @@ public class OrderController {
         System.err.println("the value of "+date);
         return service.selectByDate(date);
     }
+    @GetMapping("/CustomID/{id}")
+    public Order selectCustomById(@PathVariable("id") Integer id){
+        return service.selectById(id);
+
+    }
     @GetMapping("/Customlist")
     public List<Order> selectCustomerList(){
         return service.selectOrderList();
