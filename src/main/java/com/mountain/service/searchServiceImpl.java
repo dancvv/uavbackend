@@ -19,6 +19,11 @@ public class searchServiceImpl implements searchService{
     }
 
     @Override
+    public Order selectById(Integer id) {
+        return orderDAO.selectCustomById(id);
+    }
+
+    @Override
     public List<Order> selectOrderList() {
         return orderDAO.selectOrderList();
     }
