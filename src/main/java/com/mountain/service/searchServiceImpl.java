@@ -2,11 +2,14 @@ package com.mountain.service;
 
 import com.mountain.DAO.OrderDAO;
 import com.mountain.entity.Order;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-
+@Service
 public class searchServiceImpl implements searchService{
+    @Autowired
     OrderDAO orderDAO;
     @Override
     public void insertCustom(Order order) {

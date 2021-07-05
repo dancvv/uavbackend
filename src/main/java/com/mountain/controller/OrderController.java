@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 public class OrderController {
-
+    @Autowired
     searchService service;
     @PostMapping("/addcustomer")
     public void insertCustom(@RequestBody Order order){
