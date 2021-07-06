@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -13,8 +15,9 @@ import java.util.Date;
 public class Order {
     private int id;
     private String passenger_id;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+//    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private String date;
 //    @JsonFormat(pattern = "HH:mm:ss")
     private String create_time;
 //    @JsonFormat(pattern = "HH:mm:ss")

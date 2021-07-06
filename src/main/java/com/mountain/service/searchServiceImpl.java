@@ -5,6 +5,7 @@ import com.mountain.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 @Service
@@ -17,7 +18,7 @@ public class searchServiceImpl implements searchService{
     }
 
     @Override
-    public Order selectByDate(Date date) {
+    public Order selectByDate(String date) {
         return orderDAO.selectCustomByDate(date);
     }
 
