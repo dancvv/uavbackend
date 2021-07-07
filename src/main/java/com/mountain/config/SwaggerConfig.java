@@ -37,12 +37,4 @@ public class SwaggerConfig {
                 .build();
     }
 //    如果有多个分组，可以设置多个Docket
-    @Bean
-    public Docket docket_bra(){
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("Test Branch")
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.mountain"))
-                .build();
-    }
 }
