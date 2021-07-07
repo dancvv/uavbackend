@@ -15,6 +15,9 @@ public class MockService {
         List<Map<String, Object>> DaoList = mockDAO.getList();
         return mockDAO.getList();
     }
+    public List<Map<String,Object>> queryOrder(){
+        return mockDAO.getPeople();
+    }
 
 
 
