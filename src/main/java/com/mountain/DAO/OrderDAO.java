@@ -21,15 +21,8 @@ public class OrderDAO {
 //        String sql="insert into order values(?,?,?,?,?,?,?)";
 //        jdbcTem.update(sql);
     }
-    public Order selectCustomByDate(String date){
-        Date dat = null;
-        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            dat=dateFormat.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return jdbcTem.queryForObject("select * from orderdata where date =? ",new BeanPropertyRowMapper<Order>(Order.class),dat);
+    public Order selectCustomByDate(Date date){
+        return jdbcTem.queryForObject("select * from orderdata where date =? ",new BeanPropertyRowMapper<Order>(Order.class),date);
     }
     public Order selectCustomById(Integer id){
         return jdbcTem.queryForObject("select * from orderdata where id=? ",new BeanPropertyRowMapper<Order>(Order.class),id);

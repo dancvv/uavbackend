@@ -12,8 +12,7 @@ public class MockDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     public List<Map<String,Object>> getList(){
-        List<Map<String,Object>> list=jdbcTemplate.queryForList("select * from orderdata");
+        List<Map<String,Object>> list=jdbcTemplate.queryForList("select * from orderdata ");
         return list;
-
     }
 }

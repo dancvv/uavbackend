@@ -1,30 +1,28 @@
 package com.mountain.controller;
 
-import com.mountain.DAO.StationsDAO;
+import com.mountain.Repository.StationRepository;
 import com.mountain.entity.Location;
 import com.mountain.entity.StationInfo;
-import com.mountain.entity.Stations;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Date;
 
 @RestController
 @Api(tags = {"站点信息"})
 public class StationsController {
     @Autowired
-    StationsDAO stationDao;
+    StationRepository stationRepo;
     @GetMapping("/station")
-    public Collection<Stations> GetStation(){
+    public Collection<Location> GetStation(){
 //        获取所有车站信息
-        return stationDao.getStation();
+        return stationRepo.getStation();
     }
     @GetMapping("/station/{id}")
-    public Stations GetStationID(@RequestParam("id") Integer id){
+    public Location GetStationID(@RequestParam("id") Integer id){
 //        通过ID获取车站信息
-        return stationDao.getStationById(id);
+        return stationRepo.getStationById(id);
     }
     @PostMapping("/station")
     public StationInfo PostStation(@RequestBody StationInfo postStationInfo){

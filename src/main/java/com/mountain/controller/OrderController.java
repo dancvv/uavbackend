@@ -13,15 +13,16 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @RestController
 public class OrderController {
     @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request) {
-        // TODO Auto-generated method stub
-        //转换日期
-        DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    public void initBinder(WebDataBinder webDataBinder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        dateFormat.setLenient(false);
+        webDataBinder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
     @Autowired
     searchService service;
@@ -30,7 +31,7 @@ public class OrderController {
         service.insertCustom(order);
     }
     @GetMapping("/customer")
-    public Order selectByDate(@RequestParam("date") String date){
+    public Order selectByDate(@RequestParam("date") Date date){
 
         return service.selectByDate(date);
     }

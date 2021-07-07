@@ -15,9 +15,9 @@ import java.util.Date;
 public class Order {
     private int id;
     private String passenger_id;
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
-//    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
-    private String date;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private Date date;
 //    @JsonFormat(pattern = "HH:mm:ss")
     private String create_time;
 //    @JsonFormat(pattern = "HH:mm:ss")

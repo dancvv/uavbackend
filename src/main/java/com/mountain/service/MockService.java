@@ -13,8 +13,6 @@ public class MockService {
     private MockDAO mockDAO;
     public List<Map<String,Object>> queryList(){
         List<Map<String, Object>> DaoList = mockDAO.getList();
-//        DaoList.contains("up_stop_id");
-//        System.out.println(DaoList.contains("up_stop_id"));
         return mockDAO.getList();
     }
 

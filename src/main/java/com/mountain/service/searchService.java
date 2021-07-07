@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface searchService {
     void insertCustom(Order order);
-    Order selectByDate(String date);
+    Order selectByDate(Date date);
 
 //    Order selectByDate(LocalDate date);
 

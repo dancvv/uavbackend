@@ -18,7 +18,7 @@ public class searchServiceImpl implements searchService{
     }
 
     @Override
-    public Order selectByDate(String date) {
+    public Order selectByDate(Date date) {
         return orderDAO.selectCustomByDate(date);
     }
 
