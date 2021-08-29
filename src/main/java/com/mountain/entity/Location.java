@@ -6,12 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Location {
     @TableId(value = "id",type = IdType.ASSIGN_ID)
-    private Long id;
+//    使用数据类型存在精度限制
+    private String id;
     private Double lat;
     private Double lng;
 }
