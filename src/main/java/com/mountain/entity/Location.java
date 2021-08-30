@@ -12,7 +12,7 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Location {
-    @TableId(value = "id",type = IdType.ASSIGN_ID)
+    @TableId(value = "id",type = IdType.AUTO)
 //    使用数据类型存在精度限制
     private String id;
     private Double lat;

@@ -114,8 +114,8 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         Double [][]locaList = new Double[list.size()][2];
         int i=0;
         for (Location location : list) {
-            locaList[i][0]=location.getLng()*1000;
-            locaList[i][1]=location.getLat()*1000;
+            locaList[i][0]=location.getLng();
+            locaList[i][1]=location.getLat();
             i++;
         }
 
@@ -123,10 +123,12 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
 //        for (Double[] loca : locaList) {
 //            System.out.println("行矩阵：" + Arrays.toString(loca));
 //        }
-//        final Double[][] distances = orToolsDAO.distance(locaList);
+//        调用dao层计算距离
+        final Double[][] distances = orToolsDAO.distance(locaList);
 //        for (Double[] distance:distances){
 //            System.out.println("打印距离矩阵："+Arrays.toString(distance));
 //        }
-        return locaList;
+
+        return distances;
     }
 }
