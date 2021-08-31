@@ -2,10 +2,9 @@ package com.mountain.ortools;
 
 import com.mountain.DAO.orToolsDAO;
 import com.mountain.Mapper.LocaMapper;
-import com.mountain.Mapper.generalMapper;
 import com.mountain.entity.Location;
-import com.mountain.service.impl.GenralLocationServiceImpl;
 import com.mountain.service.impl.LocationServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +19,7 @@ public class orController {
     private LocationServiceImpl locationService;
 //    标准化地理数据服务
     @Autowired
-    private GenralLocationServiceImpl genralLocationService;
-    @Autowired
     private LocaMapper locaMapper;
-    @Autowired
-    private generalMapper geMapper;
     @PostMapping("/depotData")
     public Map<String,Object>  getRoute(@RequestBody Collection<Location> list){
 //        boolean save = locationService.save(list);
@@ -60,8 +55,6 @@ public class orController {
         Map<String,Object> infoMap=new HashMap<>();
 //        删除主表
         locaMapper.deleteLocation();
-//        删除次表
-        geMapper.deleteLocation();
         infoMap.put("msg","调用成功");
         infoMap.put("status",200);
         return infoMap;
@@ -73,8 +66,8 @@ public class orController {
         return count;
     }
 //    距离计算
-    @GetMapping("/plan")
-    public Map<String,Object> routePlan(){
+    @PostMapping("/plan")
+    public Map<String,Object> routePlan(@RequestParam Integer vehicleNumber,@RequestParam Integer depot){
         Map<String,Object> infoMap=new HashMap<>();
 //        距离矩阵
         Map<Integer,List<Location>> mapList = new HashMap<>();
@@ -91,31 +84,15 @@ public class orController {
             final Double[][] distanceMatrix = locationService.distanceCompute(locationList);
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
-            Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute(distanceMatrix, 4, 0);
-//            System.out.println(routeList);
-//            for(int i=0;i<routeList.size();i++){
-//                List<Location> line=new ArrayList<>();
-//
-//                Iterator<Integer> it= routeList.get(i).iterator();
-//                while (it.hasNext()){
-//                    System.out.println(it.next());
-//                    line.add(locationService.getById(it.next()));
-//                }
-//                mapList.put(i,line);
-//                System.out.println(mapList);
-//            }
+            Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute(distanceMatrix, vehicleNumber, depot);
             infoMap.put("info",routeList);
         }
         return infoMap;
     }
+    @ApiOperation("通过id查询")
     @GetMapping("/getLocationByID")
     public Location locationById(@RequestParam Integer locationId){
-//        System.out.println(locationId);
-//        System.out.println(locationService.getById(locationId));
+//        利用服务查询相应的坐标数据
         return locationService.getById(locationId);
-//        利用计算结果的数据取出坐标
-//        Map<Integer, ArrayList<Integer>>
-//        System.out.println(routeList);
-//        return routeList;
     }
 }

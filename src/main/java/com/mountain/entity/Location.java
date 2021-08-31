@@ -14,7 +14,7 @@ import java.math.BigInteger;
 public class Location {
     @TableId(value = "id",type = IdType.AUTO)
 //    使用数据类型存在精度限制
-    private String id;
+    private BigInteger id;
     private Double lat;
     private Double lng;
 }
