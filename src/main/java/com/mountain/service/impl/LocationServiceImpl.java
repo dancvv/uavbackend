@@ -22,8 +22,6 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
 //    计算矩阵值
     @Autowired
     private orToolsDAO orToolsDAO;
-
-
     /// @brief Print the solution.
     static Map<Integer, ArrayList<Integer>> printSolution(int vehicleNumber, RoutingModel routing, RoutingIndexManager manager, Assignment solution) {
         Map<Integer, ArrayList<Integer>> routeMap=new HashMap<>();
@@ -34,13 +32,13 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         for (int i = 0; i < vehicleNumber; ++i) {
 //            从i个车出发的索引
             long index = routing.start(i);
-            System.out.println("测试"+index);
+//            System.out.println("测试"+index);
             logger.info("Route for Vehicle " + i + ":");
 //            行驶距离
             long routeDistance = 0;
 //            字符串
             String route = "";
-            System.out.println(index);
+//            System.out.println(index);
             ArrayList<Integer> arrayList=new ArrayList<>();
             arrayList.add(manager.indexToNode(index));
             while (!routing.isEnd(index)) {
@@ -64,7 +62,7 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         }
         logger.info("Maximum of the route distances: " + maxRouteDistance + "m");
 
-        System.out.println(routeMap);
+//        System.out.println(routeMap);
 //        返回计算路线结果集
         return routeMap;
     }
@@ -101,7 +99,6 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
                 .build();
 //        求解问题
         Assignment solution = routing.solveWithParameters(searchParameters);
-
 //        打印求解
         Map<Integer, ArrayList<Integer>> routeList = printSolution(vehicleNumber, routing, manager, solution);
         return routeList;
@@ -114,11 +111,10 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         Double [][]locaList = new Double[list.size()][2];
         int i=0;
         for (Location location : list) {
-            locaList[i][0]=location.getLng();
-            locaList[i][1]=location.getLat();
+            locaList[i][0]=location.getLng()*1000;
+            locaList[i][1]=location.getLat()*1000;
             i++;
         }
-
 //        打印矩阵
 //        for (Double[] loca : locaList) {
 //            System.out.println("行矩阵：" + Arrays.toString(loca));
@@ -128,7 +124,6 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
 //        for (Double[] distance:distances){
 //            System.out.println("打印距离矩阵："+Arrays.toString(distance));
 //        }
-
         return distances;
     }
 }

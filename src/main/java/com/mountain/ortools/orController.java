@@ -82,16 +82,16 @@ public class orController {
         List<Location> locationList = locationService.list();
         List<Map<String, Object>> maps = locationService.listMaps();
         if (locationList.size()<=2){
-            infoMap.put("status","服务器中资源不足，添加数据");
-            infoMap.put("msg",404);
+            infoMap.put("msg","服务器中资源不足，添加数据");
+            infoMap.put("status",404);
         }else {
-            infoMap.put("status","调用成功");
-            infoMap.put("msg",200);
+            infoMap.put("msg","调用成功");
+            infoMap.put("status",200);
 //            调用距离计算模块
             final Double[][] distanceMatrix = locationService.distanceCompute(locationList);
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
-            Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute(distanceMatrix, 4, 2);
+            Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute(distanceMatrix, 4, 0);
 //            System.out.println(routeList);
 //            for(int i=0;i<routeList.size();i++){
 //                List<Location> line=new ArrayList<>();
@@ -110,8 +110,8 @@ public class orController {
     }
     @GetMapping("/getLocationByID")
     public Location locationById(@RequestParam Integer locationId){
-        System.out.println(locationId);
-        System.out.println(locationService.getById(locationId));
+//        System.out.println(locationId);
+//        System.out.println(locationService.getById(locationId));
         return locationService.getById(locationId);
 //        利用计算结果的数据取出坐标
 //        Map<Integer, ArrayList<Integer>>
