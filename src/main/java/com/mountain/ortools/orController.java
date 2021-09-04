@@ -21,7 +21,7 @@ public class orController {
     @Autowired
     private LocaMapper locaMapper;
     @PostMapping("/depotData")
-    public Map<String,Object>  getRoute(@RequestBody Collection<Location> list){
+    public Map<String,Object>  postRoute(@RequestBody Collection<Location> list){
 //        boolean save = locationService.save(list);
 //        保存单条数据
 //        boolean save = locationService.saveOrUpdate(list);
@@ -41,10 +41,8 @@ public class orController {
         return status;
     }
     @Autowired
-    private orToolsDAO orDAO;
     @GetMapping("/list")
     public List<Location> showList(){
-
         List<Location> locationList = locationService.list();
         List<Map<String, Object>> maps = locationService.listMaps();
         return locationList;
@@ -67,10 +65,9 @@ public class orController {
     }
 //    距离计算
     @PostMapping("/plan")
-    public Map<String,Object> routePlan(@RequestParam Integer vehicleNumber,@RequestParam Integer depot){
+    public Map<String,Object> routePlan(@RequestParam() Integer vehicleNumber){
         Map<String,Object> infoMap=new HashMap<>();
 //        距离矩阵
-        Map<Integer,List<Location>> mapList = new HashMap<>();
 //        目前的问题是如何计算一个数组的矩阵值
         List<Location> locationList = locationService.list();
         List<Map<String, Object>> maps = locationService.listMaps();
@@ -84,7 +81,7 @@ public class orController {
             final Double[][] distanceMatrix = locationService.distanceCompute(locationList);
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
-            Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute(distanceMatrix, vehicleNumber, depot);
+            Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute(distanceMatrix, vehicleNumber, 3);
             infoMap.put("info",routeList);
         }
         return infoMap;
