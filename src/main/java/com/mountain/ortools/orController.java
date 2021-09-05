@@ -81,7 +81,7 @@ public class orController {
             final Long[][] distanceMatrix = locationService.distanceCompute(locationList);
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
-            Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute( distanceMatrix, vehicleNumber, depot);
+            Map<Integer, ArrayList<Integer>> routeList =locationService.mainCompute( distanceMatrix, vehicleNumber, depot);
             infoMap.put("info",routeList);
         }
         return infoMap;

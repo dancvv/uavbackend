@@ -26,7 +26,7 @@ public class orToolsDAO {
                     double acos = Math.acos(cos); // 反余弦值
 //                    由于ortools的限制，需要采取缩放保证数值精确度，
 //                    将所有距离值乘以1000，然后进行取整
-                    double dis= (EARTH_RADIUS*acos)*1000;
+                    double dis= (EARTH_RADIUS*acos);
                     distanceMatrix[rowIndex][colIndex]=Math.round(dis);
                     System.out.println("距离为 "+dis+" 米");
                 }
