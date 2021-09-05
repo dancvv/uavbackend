@@ -3,7 +3,7 @@ package com.mountain.ortools;
 import com.mountain.DAO.orToolsDAO;
 import com.mountain.Mapper.LocaMapper;
 import com.mountain.entity.Location;
-import com.mountain.service.impl.LocationServiceImpl;
+import com.mountain.service.impl.PositionServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +16,20 @@ import java.util.*;
 @RequestMapping("/compute")
 public class orController {
     @Autowired
-    private LocationServiceImpl locationService;
+    private PositionServiceImpl positionService;
 //    标准化地理数据服务
     @Autowired
     private LocaMapper locaMapper;
+
+    @Autowired
+    private orToolsDAO ordao;
     @PostMapping("/depotData")
     public Map<String,Object>  postRoute(@RequestBody Collection<Location> list){
 //        boolean save = locationService.save(list);
 //        保存单条数据
 //        boolean save = locationService.saveOrUpdate(list);
         Map<String,Object> status=new HashMap<>();
-        boolean save = locationService.saveBatch(list);
+        boolean save = positionService.saveBatch(list);
 //        boolean save = locationService.saveOrUpdateBatch(list);
         if (!save){
             status.put("status",404);
@@ -43,8 +46,8 @@ public class orController {
     @Autowired
     @GetMapping("/list")
     public List<Location> showList(){
-        List<Location> locationList = locationService.list();
-        List<Map<String, Object>> maps = locationService.listMaps();
+        List<Location> locationList = positionService.list();
+        List<Map<String, Object>> maps = positionService.listMaps();
         return locationList;
     }
 //    删除所有表数据
@@ -53,24 +56,22 @@ public class orController {
         Map<String,Object> infoMap=new HashMap<>();
 //        删除主表
         locaMapper.deleteLocation();
-        infoMap.put("msg","调用成功");
+        infoMap.put("msg","删除成功");
         infoMap.put("status",200);
         return infoMap;
     }
 
     @GetMapping("/count")
     public Long querry(){
-        final Long count = locationService.count();
-        return count;
+        return positionService.count();
     }
 //    距离计算
     @PostMapping("/plan")
     public Map<String,Object> routePlan(@RequestParam Integer vehicleNumber ,@RequestParam Integer depot){
         Map<String,Object> infoMap=new HashMap<>();
 //        距离矩阵
-//        目前的问题是如何计算一个数组的矩阵值
-        List<Location> locationList = locationService.list();
-        List<Map<String, Object>> maps = locationService.listMaps();
+        List<Location> locationList = positionService.list();
+        List<Map<String, Object>> maps = positionService.listMaps();
         if (locationList.size()<=2){
             infoMap.put("msg","服务器中资源不足，添加数据");
             infoMap.put("status",404);
@@ -78,10 +79,11 @@ public class orController {
             infoMap.put("msg","调用成功");
             infoMap.put("status",200);
 //            调用距离计算模块
-            final Long[][] distanceMatrix = locationService.distanceCompute(locationList);
+            final Double[][] locationMatrix = ordao.locationMatrix(locationList);
+            final Long[][] distanceMatrix = ordao.computeDistance(locationMatrix);
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
-            Map<Integer, ArrayList<Integer>> routeList =locationService.mainCompute( distanceMatrix, vehicleNumber, depot);
+            Map<Integer, ArrayList<Integer>> routeList =positionService.planCompute( distanceMatrix, vehicleNumber, depot);
             infoMap.put("info",routeList);
         }
         return infoMap;
@@ -90,6 +92,6 @@ public class orController {
     @GetMapping("/getLocationByID")
     public Location locationById(@RequestParam Integer locationId){
 //        利用服务查询相应的坐标数据
-        return locationService.getById(locationId);
+        return positionService.getById(locationId);
     }
 }
