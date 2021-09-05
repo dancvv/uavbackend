@@ -59,13 +59,13 @@ public class orController {
     }
 
     @GetMapping("/count")
-    public long querry(){
-        final long count = locationService.count();
+    public Long querry(){
+        final Long count = locationService.count();
         return count;
     }
 //    距离计算
     @PostMapping("/plan")
-    public Map<String,Object> routePlan(@RequestParam() Integer vehicleNumber){
+    public Map<String,Object> routePlan(@RequestParam Integer vehicleNumber ,@RequestParam Integer depot){
         Map<String,Object> infoMap=new HashMap<>();
 //        距离矩阵
 //        目前的问题是如何计算一个数组的矩阵值
@@ -81,7 +81,7 @@ public class orController {
             final Double[][] distanceMatrix = locationService.distanceCompute(locationList);
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
-            Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute(distanceMatrix, vehicleNumber, 3);
+            Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute( distanceMatrix, vehicleNumber, depot);
             infoMap.put("info",routeList);
         }
         return infoMap;

@@ -69,7 +69,7 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
     public Map<Integer, ArrayList<Integer>> mainCompute(Double[][] distanceMatrix,int vehicleNumber,int depot){
 //        需要主动传输参数
         Loader.loadNativeLibraries();
-//        实例化数据问题
+//        实例化数据，此处采用distanceMatrix传递
 //        final DataModel data = new DataModel();
 //        创建路线索引管理
         RoutingIndexManager manager=new RoutingIndexManager(distanceMatrix.length,vehicleNumber,depot);
@@ -82,11 +82,12 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
             int toNode=manager.indexToNode(toIndex);
 //            返回的是矩阵值
 //            return data
+            Double distanceMatrix1 = distanceMatrix[fromNode][toNode];
             return fromIndex;
         });
         routing.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 //        添加距离约束
-        routing.addDimension(transitCallbackIndex,0,200,
+        routing.addDimension(transitCallbackIndex,0,1000,
                 true,//从零开始
                 "Distance");
         RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
@@ -111,8 +112,8 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         Double [][]locaList = new Double[list.size()][2];
         int i=0;
         for (Location location : list) {
-            locaList[i][0]=location.getLng()*1000;
-            locaList[i][1]=location.getLat()*1000;
+            locaList[i][0]=location.getLng();
+            locaList[i][1]=location.getLat();
             i++;
         }
 //        打印矩阵
@@ -121,9 +122,9 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
 //        }
 //        调用dao层计算距离
         final Double[][] distances = orToolsDAO.distance(locaList);
-//        for (Double[] distance:distances){
-//            System.out.println("打印距离矩阵："+Arrays.toString(distance));
-//        }
+        for (Double[] distance:distances){
+            System.out.println("打印距离矩阵："+Arrays.toString(distance));
+        }
         return distances;
     }
 }
