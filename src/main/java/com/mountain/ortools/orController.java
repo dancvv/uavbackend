@@ -78,7 +78,7 @@ public class orController {
             infoMap.put("msg","调用成功");
             infoMap.put("status",200);
 //            调用距离计算模块
-            final Double[][] distanceMatrix = locationService.distanceCompute(locationList);
+            final Long[][] distanceMatrix = locationService.distanceCompute(locationList);
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
             Map<Integer, ArrayList<Integer>> routeList = locationService.mainCompute( distanceMatrix, vehicleNumber, depot);

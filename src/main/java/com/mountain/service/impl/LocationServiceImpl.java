@@ -66,7 +66,7 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
 //        返回计算路线结果集
         return routeMap;
     }
-    public Map<Integer, ArrayList<Integer>> mainCompute(Double[][] distanceMatrix,int vehicleNumber,int depot){
+    public Map<Integer, ArrayList<Integer>> mainCompute(Long[][] distanceMatrix,int vehicleNumber,int depot){
 //        需要主动传输参数
         Loader.loadNativeLibraries();
 //        实例化数据，此处采用distanceMatrix传递
@@ -82,12 +82,13 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
             int toNode=manager.indexToNode(toIndex);
 //            返回的是矩阵值
 //            return data
-            Double distanceMatrix1 = distanceMatrix[fromNode][toNode];
-            return fromIndex;
+            return distanceMatrix[fromNode][toNode];
         });
         routing.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 //        添加距离约束
-        routing.addDimension(transitCallbackIndex,0,1000,
+        routing.addDimension(transitCallbackIndex,
+                0,//没有松弛变量
+                1000,
                 true,//从零开始
                 "Distance");
         RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
@@ -107,13 +108,13 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
 /*
     生成距离矩阵，可自定义
  */
-    public Double[][] distanceCompute(List<Location> list) {
+    public Long[][] distanceCompute(List<Location> list) {
         //        生成路线矩阵
         Double [][]locaList = new Double[list.size()][2];
         int i=0;
         for (Location location : list) {
-            locaList[i][0]=location.getLng();
-            locaList[i][1]=location.getLat();
+            locaList[i][0]=location.getLng().doubleValue();
+            locaList[i][1]=location.getLat().doubleValue();
             i++;
         }
 //        打印矩阵
@@ -121,8 +122,8 @@ public class LocationServiceImpl extends ServiceImpl<LocaMapper, Location> imple
 //            System.out.println("行矩阵：" + Arrays.toString(loca));
 //        }
 //        调用dao层计算距离
-        final Double[][] distances = orToolsDAO.distance(locaList);
-        for (Double[] distance:distances){
+        final Long[][] distances = orToolsDAO.computeDistance(locaList);
+        for (Long[] distance:distances){
             System.out.println("打印距离矩阵："+Arrays.toString(distance));
         }
         return distances;
