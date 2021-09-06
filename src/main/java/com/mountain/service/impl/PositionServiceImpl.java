@@ -41,9 +41,10 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         routing.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 
         // Add Distance constraint.
+        // 无人机最大飞行距离设置为8km
         routing.addDimension(transitCallbackIndex,
                 0,
-                60000,
+                80000,
                 true, // start cumul to zero
                 "Distance");
         RoutingDimension distanceDimension = routing.getMutableDimension("Distance");

@@ -36,14 +36,14 @@ public class orToolsDAO {
 //                    将所有距离值乘以10，然后取整，使得精度提升至分米级
                     double dis= (EARTH_RADIUS*acos*10);
                     distanceMatrix[rowIndex][colIndex]=Math.round(dis);
-                    System.out.println("距离为 "+dis+" 分米");
+//                    System.out.println("距离为 "+dis+" 分米");
                 }
             }
         }
 //        打印调试
-//        for (Long[] distance:distanceMatrix){
-//            System.out.println("打印距离矩阵："+ Arrays.toString(distance));
-//        }
+        for (Long[] distance:distanceMatrix){
+            System.out.println("打印距离矩阵："+ Arrays.toString(distance));
+        }
         return distanceMatrix;
     }
 //    打印求解的结果

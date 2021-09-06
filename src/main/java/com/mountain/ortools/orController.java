@@ -33,10 +33,10 @@ public class orController {
 //        boolean save = locationService.saveOrUpdateBatch(list);
         if (!save){
             status.put("status",404);
-            status.put("msg","更新失败，检查输入");
+            status.put("msg","上传失败，检查输入");
         }else {
             status.put("status",200);
-            status.put("msg","更新成功");
+            status.put("msg","上传成功");
         }
         System.out.println(status);
         System.out.println(list);
@@ -56,7 +56,7 @@ public class orController {
         Map<String,Object> infoMap=new HashMap<>();
 //        删除主表
         locaMapper.deleteLocation();
-        infoMap.put("msg","删除成功");
+        infoMap.put("msg","删除后台数据成功");
         infoMap.put("status",200);
         return infoMap;
     }
@@ -76,7 +76,7 @@ public class orController {
             infoMap.put("msg","服务器中资源不足，添加数据");
             infoMap.put("status",404);
         }else {
-            infoMap.put("msg","调用成功");
+            infoMap.put("msg","规划求解成功");
             infoMap.put("status",200);
 //            调用距离计算模块
             final Double[][] locationMatrix = ordao.locationMatrix(locationList);
@@ -90,8 +90,19 @@ public class orController {
     }
     @ApiOperation("通过id查询")
     @GetMapping("/getLocationByID")
-    public Location locationById(@RequestParam Integer locationId){
-//        利用服务查询相应的坐标数据
-        return positionService.getById(locationId);
+    public Map<String,Object> locationById(@RequestParam Integer locationId){
+        Map<String,Object> infoMap = new HashMap<>();
+        Location tempLocation = new Location();
+        try{
+            tempLocation = positionService.getById(locationId);
+            infoMap.put("msg","根据id查询坐标成功");
+            infoMap.put("status",200);
+            infoMap.put("location",tempLocation);
+        } catch (Exception e) {
+            infoMap.put("status",404);
+            infoMap.put("msg","查询失败");
+            e.printStackTrace();
+        }
+        return infoMap;
     }
 }
