@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 @Service
@@ -65,5 +66,29 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         return ordao.printSolution(vehicleNumber, routing, manager, solution);
     }
 //    MDVRP路线规划
-    public
+    public Map<Integer,ArrayList<Integer>> movePassengerPlan(Long[][] tempDistanceMatrix, Integer vehicleNumber , int[] startPosition, int[] depot){
+        Loader.loadNativeLibraries();
+        RoutingIndexManager mdVRPmanager=new RoutingIndexManager(tempDistanceMatrix.length,
+                vehicleNumber,
+                startPosition,
+                depot);
+
+        RoutingModel planRouting = new RoutingModel(mdVRPmanager);
+
+        final int transitCallbackIndex=planRouting.registerTransitCallback((long fromIndex,long toIndex)->{
+            int fromNode=mdVRPmanager.indexToNode(fromIndex);
+            int toNode=mdVRPmanager.indexToNode(toIndex);
+            return tempDistanceMatrix[fromNode][toNode];
+        });
+        planRouting.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
+        planRouting.addDimension(transitCallbackIndex,0,6000,true,"Distance");
+        RoutingDimension mutableDimension = planRouting.getMutableDimension("Distance");
+        mutableDimension.setGlobalSpanCostCoefficient(100);
+        RoutingSearchParameters routingSearchParameters = main.defaultRoutingSearchParameters()
+                .toBuilder()
+                .setFirstSolutionStrategy(FirstSolutionStrategy.Value.PATH_CHEAPEST_ARC)
+                .build();
+        Assignment solution = planRouting.solveWithParameters(routingSearchParameters);
+        return ordao.printSolution(vehicleNumber,planRouting,mdVRPmanager,solution);
+    }
 }

@@ -106,7 +106,9 @@ public class orController {
 //    上传移动用户的当前位置
     @PostMapping("passengermoving")
     public void uploadMovingPassenger(@RequestParam List<Location> movingPassenger){
+        final int[] starts={};
+        final int[] stop={};
 
-
+        positionService.movePassengerPlan()
     }
 }
