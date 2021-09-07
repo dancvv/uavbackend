@@ -18,6 +18,7 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
 
     @Autowired
     private orToolsDAO ordao;
+//    VRP路线规划
     public Map<Integer, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
         Loader.loadNativeLibraries();
 
@@ -63,4 +64,6 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         // Print solution on console.
         return ordao.printSolution(vehicleNumber, routing, manager, solution);
     }
+//    MDVRP路线规划
+    public
 }

@@ -47,7 +47,6 @@ public class orController {
     @GetMapping("/list")
     public List<Location> showList(){
         List<Location> locationList = positionService.list();
-        List<Map<String, Object>> maps = positionService.listMaps();
         return locationList;
     }
 //    删除所有表数据
@@ -60,12 +59,12 @@ public class orController {
         infoMap.put("status",200);
         return infoMap;
     }
-
+//查询总共有多少条数据
     @GetMapping("/count")
     public Long querry(){
         return positionService.count();
     }
-//    距离计算
+//    规划路线
     @PostMapping("/plan")
     public Map<String,Object> routePlan(@RequestParam Integer vehicleNumber ,@RequestParam Integer depot){
         Map<String,Object> infoMap=new HashMap<>();
@@ -88,7 +87,6 @@ public class orController {
         }
         return infoMap;
     }
-    @ApiOperation("通过id查询")
     @GetMapping("/getLocationByID")
     public Map<String,Object> locationById(@RequestParam Integer locationId){
         Map<String,Object> infoMap = new HashMap<>();
@@ -104,5 +102,11 @@ public class orController {
             e.printStackTrace();
         }
         return infoMap;
+    }
+//    上传移动用户的当前位置
+    @PostMapping("passengermoving")
+    public void uploadMovingPassenger(@RequestParam List<Location> movingPassenger){
+
+
     }
 }
