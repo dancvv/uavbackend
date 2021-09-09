@@ -1,8 +1,6 @@
 package com.mountain.DAO;
 
-import com.google.ortools.constraintsolver.Assignment;
-import com.google.ortools.constraintsolver.RoutingIndexManager;
-import com.google.ortools.constraintsolver.RoutingModel;
+import com.google.ortools.constraintsolver.*;
 import com.mountain.entity.Location;
 import org.springframework.stereotype.Repository;
 
@@ -106,5 +104,7 @@ public class orToolsDAO {
 //        }
         return locaList;
     }
+
+
 
 }

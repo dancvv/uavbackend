@@ -19,16 +19,10 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
 
     @Autowired
     private orToolsDAO ordao;
-//    VRP路线规划
-    public Map<Integer, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
-        Loader.loadNativeLibraries();
-
-        // Create Routing Index Manager
-        RoutingIndexManager manager =
-                new RoutingIndexManager( distanceMatrix.length,  vehicleNumber,  depot);
-
+//    抽离共同代码
+    public Assignment computeService(RoutingIndexManager manager,Long[][] distanceMatrix, Integer vehicleNumber,RoutingModel routing){
         // Create Routing Model.
-        RoutingModel routing = new RoutingModel(manager);
+//        RoutingModel routing = new RoutingModel(manager);
 
         // Create and register a transit callback.
         final int transitCallbackIndex =
@@ -63,6 +57,54 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         Assignment solution = routing.solveWithParameters(searchParameters);
 
         // Print solution on console.
+        return solution;
+    }
+//    VRP路线规划
+    public Map<Integer, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
+        Loader.loadNativeLibraries();
+
+        // Create Routing Index Manager
+        RoutingIndexManager manager =
+                new RoutingIndexManager( distanceMatrix.length,  vehicleNumber,  depot);
+
+////        // Create Routing Model.
+        RoutingModel routing = new RoutingModel(manager);
+////
+//        // Create and register a transit callback.
+//        final int transitCallbackIndex =
+//                routing.registerTransitCallback((long fromIndex, long toIndex) -> {
+//                    // Convert from routing variable Index to user NodeIndex.
+//                    int fromNode = manager.indexToNode(fromIndex);
+//                    int toNode = manager.indexToNode(toIndex);
+//                    return distanceMatrix[fromNode][toNode];
+//                });
+//
+//        // Define cost of each arc.
+//        routing.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
+//
+//        // Add Distance constraint.
+//        // 无人机最大飞行距离设置为8km
+//        routing.addDimension(transitCallbackIndex,
+//                0,
+//                80000,
+//                true, // start cumul to zero
+//                "Distance");
+//        RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
+//        distanceDimension.setGlobalSpanCostCoefficient(100);
+//
+//        // Setting first solution heuristic.
+//        RoutingSearchParameters searchParameters =
+//                main.defaultRoutingSearchParameters()
+//                        .toBuilder()
+//                        .setFirstSolutionStrategy(FirstSolutionStrategy.Value.PATH_CHEAPEST_ARC)
+//                        .build();
+//
+//        // Solve the problem.
+//        Assignment solution = routing.solveWithParameters(searchParameters);
+//
+//        // Print solution on console.
+//        return ordao.printSolution(vehicleNumber, routing, manager, solution);
+        Assignment solution = computeService(manager, distanceMatrix, vehicleNumber,routing);
         return ordao.printSolution(vehicleNumber, routing, manager, solution);
     }
 //    MDVRP路线规划
@@ -72,23 +114,25 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
                 vehicleNumber,
                 startPosition,
                 depot);
-
+//        computeService(mdVRPmanager,tempDistanceMatrix,vehicleNumber,);
         RoutingModel planRouting = new RoutingModel(mdVRPmanager);
-
-        final int transitCallbackIndex=planRouting.registerTransitCallback((long fromIndex,long toIndex)->{
-            int fromNode=mdVRPmanager.indexToNode(fromIndex);
-            int toNode=mdVRPmanager.indexToNode(toIndex);
-            return tempDistanceMatrix[fromNode][toNode];
-        });
-        planRouting.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
-        planRouting.addDimension(transitCallbackIndex,0,6000,true,"Distance");
-        RoutingDimension mutableDimension = planRouting.getMutableDimension("Distance");
-        mutableDimension.setGlobalSpanCostCoefficient(100);
-        RoutingSearchParameters routingSearchParameters = main.defaultRoutingSearchParameters()
-                .toBuilder()
-                .setFirstSolutionStrategy(FirstSolutionStrategy.Value.PATH_CHEAPEST_ARC)
-                .build();
-        Assignment solution = planRouting.solveWithParameters(routingSearchParameters);
+//
+//        final int transitCallbackIndex=planRouting.registerTransitCallback((long fromIndex,long toIndex)->{
+//            int fromNode=mdVRPmanager.indexToNode(fromIndex);
+//            int toNode=mdVRPmanager.indexToNode(toIndex);
+//            return tempDistanceMatrix[fromNode][toNode];
+//        });
+//        planRouting.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
+//        planRouting.addDimension(transitCallbackIndex,0,6000,true,"Distance");
+//        RoutingDimension mutableDimension = planRouting.getMutableDimension("Distance");
+//        mutableDimension.setGlobalSpanCostCoefficient(100);
+//        RoutingSearchParameters routingSearchParameters = main.defaultRoutingSearchParameters()
+//                .toBuilder()
+//                .setFirstSolutionStrategy(FirstSolutionStrategy.Value.PATH_CHEAPEST_ARC)
+//                .build();
+//        Assignment solution = planRouting.solveWithParameters(routingSearchParameters);
+//        return ordao.printSolution(vehicleNumber,planRouting,mdVRPmanager,solution);
+        Assignment solution=computeService(mdVRPmanager,tempDistanceMatrix,vehicleNumber,planRouting);
         return ordao.printSolution(vehicleNumber,planRouting,mdVRPmanager,solution);
     }
 }
