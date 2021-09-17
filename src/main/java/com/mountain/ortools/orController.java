@@ -70,7 +70,6 @@ public class orController {
         Map<String,Object> infoMap=new HashMap<>();
 //        距离矩阵
         List<Location> locationList = positionService.list();
-        List<Map<String, Object>> maps = positionService.listMaps();
         if (locationList.size()<=2){
             infoMap.put("msg","服务器中资源不足，添加数据");
             infoMap.put("status",404);
@@ -114,7 +113,6 @@ public class orController {
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
         Map<Integer, ArrayList<Integer>> routeList =positionService.movePassengerPlan(distanceMatrix,4,starts,stop);
-//        positionService.movePassengerPlan()
         return routeList;
     }
 }
