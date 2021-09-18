@@ -45,9 +45,13 @@ public class orController {
     }
     @Autowired
     @GetMapping("/list")
-    public List<Location> showList(){
+    public Map<String,Object> showList(){
+        Map<String,Object> infoMap = new HashMap<>();
         List<Location> locationList = positionService.list();
-        return locationList;
+        infoMap.put("msg","获取所有坐标点信息");
+        infoMap.put("status",200);
+        infoMap.put("data",locationList);
+        return infoMap;
     }
 //    删除所有表数据
     @GetMapping("/delete")
