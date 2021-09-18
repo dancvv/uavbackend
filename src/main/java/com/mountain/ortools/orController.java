@@ -91,7 +91,7 @@ public class orController {
         return infoMap;
     }
     @GetMapping("/getLocationByID")
-    public Map<String,Object> locationById(@RequestParam Integer locationId){
+    public Map<String,Object> locationById(@RequestParam String locationId){
         Map<String,Object> infoMap = new HashMap<>();
         Location tempLocation = new Location();
         try{
