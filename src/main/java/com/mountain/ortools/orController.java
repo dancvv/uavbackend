@@ -86,6 +86,7 @@ public class orController {
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
             Map<Integer, ArrayList<Integer>> routeList =positionService.planCompute( distanceMatrix, vehicleNumber, depot);
+            System.out.println(routeList);
             infoMap.put("info",routeList);
         }
         return infoMap;

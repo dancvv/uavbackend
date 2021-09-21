@@ -63,7 +63,7 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
     public Map<Integer, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
         Loader.loadNativeLibraries();
 
-        // Create Routing Index Manager
+        // Create Routing Index Manag er
         RoutingIndexManager manager =
                 new RoutingIndexManager( distanceMatrix.length,  vehicleNumber,  depot);
 
