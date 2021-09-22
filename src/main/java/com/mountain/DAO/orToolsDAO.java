@@ -45,10 +45,14 @@ public class orToolsDAO {
         return distanceMatrix;
     }
 //    打印求解的结果
-    public Map<Integer, ArrayList<Integer>> printSolution(int vehicleNumber, RoutingModel routing, RoutingIndexManager manager, Assignment solution) {
-        Map<Integer, ArrayList<Integer>> routeMap=new HashMap<>();
+    public Map<Object, ArrayList<Integer>> printSolution(int vehicleNumber, RoutingModel routing, RoutingIndexManager manager, Assignment solution) {
+        Map<Object, ArrayList<Integer>> routeMap=new HashMap<>();
+        ArrayList<Integer> planList = new ArrayList<>();
         // Solution cost.
         logger.info("Objective : " + solution.objectiveValue());
+        System.out.println("获取当前值");
+        System.out.println((int) solution.objectiveValue());
+        planList.add((int) solution.objectiveValue());
         // Inspect solution.
         long maxRouteDistance = 0;
         for (int i = 0; i < vehicleNumber; ++i) {
@@ -81,9 +85,10 @@ public class orToolsDAO {
             logger.info(route + manager.indexToNode(index));
             logger.info("Distance of the route: " + routeDistance + "dm");
             maxRouteDistance = Math.max(routeDistance, maxRouteDistance);
+            planList.add(Math.toIntExact(routeDistance));
         }
-        logger.info("Maximum of the route distances: " + maxRouteDistance/10 + "m");
-
+        logger.info("Maximum of the route distances: " + maxRouteDistance + "dm");
+        routeMap.put("routeDistance",planList);
 //        System.out.println(routeMap);
 //        返回计算路线结果集
         return routeMap;

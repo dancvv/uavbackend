@@ -11,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+
 @Service
 public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> implements LocationService {
 
@@ -60,7 +59,7 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         return solution;
     }
 //    VRP路线规划
-    public Map<Integer, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
+    public Map<Object, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
         Loader.loadNativeLibraries();
 
         // Create Routing Index Manag er
@@ -108,7 +107,7 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         return ordao.printSolution(vehicleNumber, routing, manager, solution);
     }
 //    MDVRP路线规划
-    public Map<Integer,ArrayList<Integer>> movePassengerPlan(Long[][] tempDistanceMatrix, Integer vehicleNumber , int[] startPosition, int[] depot){
+    public Map<Object, ArrayList<Integer>> movePassengerPlan(Long[][] tempDistanceMatrix, Integer vehicleNumber , int[] startPosition, int[] depot){
         Loader.loadNativeLibraries();
         RoutingIndexManager mdVRPmanager=new RoutingIndexManager(tempDistanceMatrix.length,
                 vehicleNumber,
