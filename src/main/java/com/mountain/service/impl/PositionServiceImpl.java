@@ -19,6 +19,7 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
     @Autowired
     private orToolsDAO ordao;
 //    抽离共同代码
+
     public Assignment computeService(RoutingIndexManager manager,Long[][] distanceMatrix, Integer vehicleNumber,RoutingModel routing){
         // Create Routing Model.
 //        RoutingModel routing = new RoutingModel(manager);
@@ -60,7 +61,8 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
     }
 //    VRP路线规划
     public Map<Object, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
-        Loader.loadNativeLibraries();
+        System.load("/home/r/.m2/repository/com/google/ortools/ortools-linux-x86-64/9.0.9048/linux-x86-64/libjniortools.so");
+//        Loader.loadNativeLibraries();
 
         // Create Routing Index Manag er
         RoutingIndexManager manager =
