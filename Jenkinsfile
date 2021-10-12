@@ -16,10 +16,9 @@ pipeline{
             steps{
                 echo "maven install"
                 sh 'mvn install'
-            }
-            steps{
-                echo "maven build"
-                sh 'mvn package'
+
+               echo "maven build"
+               sh 'mvn package'
             }
         }
         stage('test'){
