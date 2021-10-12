@@ -20,13 +20,13 @@ pipeline{
         }
         stage('test'){
             steps{
-                echo 'maven test'
+                echo "maven test"
                 sh 'mvn test'
             }
        }
        stage('deploy'){
             steps{
-
+                echo "deploy"
             }
        }
     }
