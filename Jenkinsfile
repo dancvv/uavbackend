@@ -6,12 +6,6 @@ pipeline{
                 git "https://github.com/dancvv/uavbackend.git"
             }
         }
-        stage('clean'){
-            steps{
-                echo "maven package clean"
-                sh 'mvn clean'
-            }
-        }
         stage('build'){
             steps{
                 echo "maven install"
