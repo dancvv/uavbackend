@@ -18,6 +18,7 @@ public class LinkController {
         Map<String,Object> infoMap =new HashMap<>();
         infoMap.put("status",200);
         infoMap.put("msg","连接正常");
+        infoMap.put("info","success");
         return infoMap;
     }
 }
