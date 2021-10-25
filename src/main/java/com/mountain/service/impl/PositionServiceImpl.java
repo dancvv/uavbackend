@@ -61,7 +61,7 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
     }
 //    VRP路线规划
     public Map<Object, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
-        System.load("/home/r/.m2/repository/com/google/ortools/ortools-linux-x86-64/9.0.9048/linux-x86-64/libjniortools.so");
+        System.load("/home/ubuntu/.m2/repository/com/google/ortools/ortools-linux-x86-64/9.0.9048/linux-x86-64/libjniortools.so");
 //        Loader.loadNativeLibraries();
 
         // Create Routing Index Manag er
