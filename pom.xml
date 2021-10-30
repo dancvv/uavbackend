@@ -64,6 +64,11 @@
             <artifactId>ortools-java</artifactId>
             <version>9.0.9048</version>
         </dependency>
+<!--        mongodb-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
 
 
         <dependency>
