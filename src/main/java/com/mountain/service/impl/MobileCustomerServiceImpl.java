@@ -40,8 +40,8 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 
     @Override
     public String saveCustomerLocation(CustomerLocation customerLocation) {
-        String userId = customerLocation.getUser_id();
-        Query query = new Query(Criteria.where("mobile_id").is(userId));
+        String userId = customerLocation.getUserId();
+        Query query = new Query(Criteria.where("mobileId").is(userId));
         Update update = new Update();
         update.push("customerLocation",customerLocation);
         mongoTemplate.upsert(query,update,MobileCustomer.class);
@@ -50,7 +50,8 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 
     @Override
     public String deleteByUserId(String id) {
-        return null;
+        mobileCustomerRepository.deleteMobileCustomerByMobileId(id);
+        return "successfully delete";
     }
 
     @Override
@@ -64,8 +65,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     }
 
     public MobileCustomer findByUersId(String id){
-//        MobileCustomer byMobile_id = mobileCustomerRepository.findMobileCustomerByMobile_id(id);
-        Query query = new Query(Criteria.where("mobile_id").is(id));
+        Query query = new Query(Criteria.where("mobileId").is(id));
         MobileCustomer byId = mongoTemplate.findOne(query, MobileCustomer.class);
         System.out.println(byId);
         return byId;

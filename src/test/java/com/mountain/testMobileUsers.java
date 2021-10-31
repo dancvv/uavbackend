@@ -18,8 +18,8 @@ public class testMobileUsers {
     @Test
     public void testInsertMobileUsers(){
         MobileCustomer mobileCustomer = new MobileCustomer();
-        mobileCustomer.setMobile_id("black_mountain_1001");
-        mobileCustomer.setCreate_time(new Date());
-        mobileCustomer.setService_status("unserved");
+        mobileCustomer.setMobileId("black_mountain_1001");
+        mobileCustomer.setCreateTime(new Date());
+        mobileCustomer.setServiceStatus("unserved");
     }
 }

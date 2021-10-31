@@ -2,7 +2,6 @@ package com.mountain.service;
 
 import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 

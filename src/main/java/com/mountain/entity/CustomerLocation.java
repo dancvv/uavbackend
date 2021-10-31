@@ -17,11 +17,11 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerLocation {
-    private String user_id;
+    private String userId;
 //    当前服务状态：1：服务，0：未服务
     private Boolean status;
 //    服务时间
-    private Date service_time;
-    private GeoJsonPoint jsonPoint;
+    private Date serviceTime;
+    private GeoJsonPoint geoPoint;
 
 }
