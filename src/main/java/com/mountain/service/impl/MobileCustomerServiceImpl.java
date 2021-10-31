@@ -87,13 +87,29 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     @Override
     public Map<String, Object> updateManyUsersLocation(List<CustomerLocation> customerLocationList) {
         Map<String,Object> megMap = new HashMap<>();
-        CustomerLocation tempLocation = new CustomerLocation();
-        ListIterator<CustomerLocation> iterator = customerLocationList.listIterator();
-        while (iterator.hasNext()){
-            tempLocation = iterator.next();
-            Query query = new Query(Criteria.where("mobileId").is(tempLocation.getUserId()));
-            MobileCustomer one = mongoTemplate.findOne(query, MobileCustomer.class);
+//        CustomerLocation tempLocation = new CustomerLocation();
+        for (CustomerLocation customerLocation : customerLocationList) {
+            Query query = new Query(Criteria.where("mobileId").is(customerLocation.getUserId()));
+            MobileCustomer verifyOne = mongoTemplate.findOne(query, MobileCustomer.class);
+            if (verifyOne == null) {
+                megMap.put("meg", "the user does not exist, checkin");
+            } else {
+                Query queryUsers = new Query(Criteria.where("mobileId").is(customerLocation.getUserId()));
+                Update update = new Update();
+                mongoTemplate.upsert(queryUsers, update, MobileCustomer.class);
+                megMap.put("meg","successfully insert");
+            }
         }
+        return megMap;
+    }
+
+    @Override
+    public Map<String, Object> LocationCompare() {
+        Map<String,Object> megMap = new HashMap<>();
+//        先根据id查询单个用户的最新位置
+        Query query = new Query(Criteria.where("mobileId").and("geoPoint").all());
+        List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
+        System.out.println(mobileCustomers);
         return null;
     }
 }

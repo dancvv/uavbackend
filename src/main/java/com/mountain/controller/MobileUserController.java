@@ -46,7 +46,12 @@ public class MobileUserController {
     }
 //    保存多个用户的位置
     @PostMapping("/manylocations")
-    public void saveManyUsersLocations(@RequestBody List<CustomerLocation> customerLocationList){
-
+    public Map<String, Object> saveManyUsersLocations(@RequestBody List<CustomerLocation> customerLocationList){
+        return mobileCustomerService.updateManyUsersLocation(customerLocationList);
+    }
+//    查询位置是否出界
+    @GetMapping("/realtimeflex")
+    public void calculateUsersLocation(){
+        mobileCustomerService.LocationCompare();
     }
 }
