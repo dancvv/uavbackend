@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description: 动态用户实体类设计
@@ -15,12 +18,15 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "mobileCustomer")
 public class MobileCustomer {
     @Id
     private String id;
+//    默认为唯一值
+    @Indexed(unique = true)
     private String mobile_id;
     private String service_status;
-//    创建时间
+//    用户加入时间
     private Date create_time;
-    private CustomerLocation customerLocation;
+    private List<CustomerLocation> customerLocation;
 }
