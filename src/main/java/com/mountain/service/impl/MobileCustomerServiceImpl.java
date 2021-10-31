@@ -11,7 +11,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,5 +71,19 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         MobileCustomer byId = mongoTemplate.findOne(query, MobileCustomer.class);
         System.out.println(byId);
         return byId;
+    }
+
+    @Override
+    public Map<String,Object> insertManyMobileUsers(List<MobileCustomer> customerList) {
+        Map<String,Object> megMap = new HashMap<>();
+        try {
+            Collection<MobileCustomer> insert = mongoTemplate.insert(customerList, MobileCustomer.class);
+            megMap.put("meg","successfully add");
+        }catch (Exception e){
+            System.out.println(e);
+            megMap.put("meg","failure");
+        }
+        return megMap;
+
     }
 }

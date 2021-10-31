@@ -3,6 +3,7 @@ package com.mountain.service;
 import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,4 +17,6 @@ public interface MobileCustomerService {
     String deleteByUserId(String id);
     String deleteAllUsers();
     String removeLocationByUserId(String id);
+    MobileCustomer findByUersId(String id);
+    Map<String,Object> insertManyMobileUsers(List<MobileCustomer> customerList);
 }

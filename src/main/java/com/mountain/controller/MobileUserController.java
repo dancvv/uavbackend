@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,7 +25,7 @@ public class MobileUserController {
         mobileCustomer.setCreateTime(new Date());
         return mobileCustomerService.insertMobileUsers(mobileCustomer);
     }
-    @PostMapping("/usermove")
+    @PostMapping("/onelocation")
     public String upsertUserLocation(CustomerLocation customerLocation){
         customerLocation.setServiceTime(new Date());
         return mobileCustomerService.saveCustomerLocation(customerLocation);
@@ -37,4 +38,11 @@ public class MobileUserController {
     public String deleteUserById(String id){
         return mobileCustomerService.deleteByUserId(id);
     }
+//    保存多个用户
+    @PostMapping("/savemany")
+    public Map<String,Object> saveManyMobileUsers(@RequestBody List<MobileCustomer> mobileCustomers){
+        System.out.println(mobileCustomers);
+        return mobileCustomerService.insertManyMobileUsers(mobileCustomers);
+    }
+//    保存多个用户的位置
 }
