@@ -11,10 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @description:
@@ -85,5 +82,18 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         }
         return megMap;
 
+    }
+
+    @Override
+    public Map<String, Object> updateManyUsersLocation(List<CustomerLocation> customerLocationList) {
+        Map<String,Object> megMap = new HashMap<>();
+        CustomerLocation tempLocation = new CustomerLocation();
+        ListIterator<CustomerLocation> iterator = customerLocationList.listIterator();
+        while (iterator.hasNext()){
+            tempLocation = iterator.next();
+            Query query = new Query(Criteria.where("mobileId").is(tempLocation.getUserId()));
+            MobileCustomer one = mongoTemplate.findOne(query, MobileCustomer.class);
+        }
+        return null;
     }
 }

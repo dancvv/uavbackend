@@ -45,4 +45,8 @@ public class MobileUserController {
         return mobileCustomerService.insertManyMobileUsers(mobileCustomers);
     }
 //    保存多个用户的位置
+    @PostMapping("/manylocations")
+    public void saveManyUsersLocations(@RequestBody List<CustomerLocation> customerLocationList){
+
+    }
 }
