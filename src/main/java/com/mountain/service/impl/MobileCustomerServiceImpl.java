@@ -104,12 +104,24 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     }
 
     @Override
-    public Map<String, Object> LocationCompare() {
+    public List<MobileCustomer> LocationCompare() {
         Map<String,Object> megMap = new HashMap<>();
 //        先根据id查询单个用户的最新位置
-        Query query = new Query(Criteria.where("mobileId").and("geoPoint").all());
+        Query query = new Query();
+//        必须包含location，不包含则会出现location为null值
+//        查询某一个userid，得到其坐标
+//        查询到最新的坐标，根据最新坐标来计算覆盖范围是否在50m内
+        query.fields().include("customerLocation");
         List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
+        ListIterator<MobileCustomer> mobileCustomerListIterator = mobileCustomers.listIterator();
+        while (mobileCustomerListIterator.hasNext()){
+            MobileCustomer next = mobileCustomerListIterator.next();
+            System.out.println(next.getCustomerLocation());
+        }
         System.out.println(mobileCustomers);
-        return null;
+//        List<MobileCustomer> byMobileId = mobileCustomerRepository.findByMobileId();
+//        System.out.println("--------------------------------------------");
+//        System.out.println(byMobileId);
+        return mobileCustomers;
     }
 }

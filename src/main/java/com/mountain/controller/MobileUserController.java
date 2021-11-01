@@ -51,7 +51,7 @@ public class MobileUserController {
     }
 //    查询位置是否出界
     @GetMapping("/realtimeflex")
-    public void calculateUsersLocation(){
-        mobileCustomerService.LocationCompare();
+    public List<MobileCustomer> calculateUsersLocation(){
+        return mobileCustomerService.LocationCompare();
     }
 }
