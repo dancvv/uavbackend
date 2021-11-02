@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public interface MobileCustomerService {
     Map<String,Object> insertMobileUsers(MobileCustomer mobileCustomer);
-    String saveCustomerLocation(CustomerLocation customerLocation);
+    Map<String,Object> saveCustomerLocation(CustomerLocation customerLocation);
     String deleteByUserId(String id);
     String deleteAllUsers();
     String removeLocationByUserId(String id);
@@ -22,4 +22,5 @@ public interface MobileCustomerService {
     Map<String,Object> updateManyUsersLocation(List<CustomerLocation> customerLocationList);
     List<MobileCustomer> LocationCompare();
     List<MobileCustomer>  findUserStatus(Boolean status);
+    List<Map<Object,Boolean>> findEmbedDocument();
 }

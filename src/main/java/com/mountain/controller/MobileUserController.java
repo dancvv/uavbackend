@@ -1,5 +1,6 @@
 package com.mountain.controller;
 
+import com.mountain.DAO.MobileCustomerRepository;
 import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
 import com.mountain.service.impl.MobileCustomerServiceImpl;
@@ -26,7 +27,7 @@ public class MobileUserController {
         return mobileCustomerService.insertMobileUsers(mobileCustomer);
     }
     @PostMapping("/onelocation")
-    public String upsertUserLocation(CustomerLocation customerLocation){
+    public Map<String,Object> upsertUserLocation(CustomerLocation customerLocation){
         customerLocation.setServiceTime(new Date());
         return mobileCustomerService.saveCustomerLocation(customerLocation);
     }
@@ -58,5 +59,10 @@ public class MobileUserController {
     @GetMapping("/status")
     public List<MobileCustomer> getStatus(Boolean status){
         return mobileCustomerService.findUserStatus(status);
+    }
+//    查询内嵌文档
+    @GetMapping("/mobileid")
+    public List<Map<Object,Boolean>> getMobilId(){
+        return mobileCustomerService.findEmbedDocument();
     }
 }

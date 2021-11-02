@@ -45,13 +45,21 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     }
 
     @Override
-    public String saveCustomerLocation(CustomerLocation customerLocation) {
+    public Map<String,Object> saveCustomerLocation(CustomerLocation customerLocation) {
+        Map<String,Object> megMap = new HashMap<>();
         String userId = customerLocation.getUserId();
         Query query = new Query(Criteria.where("mobileId").is(userId));
-        Update update = new Update();
-        update.push("customerLocation",customerLocation);
-        mongoTemplate.upsert(query,update,MobileCustomer.class);
-        return "successfully upsert new location";
+        MobileCustomer verifyOne = mongoTemplate.findOne(query, MobileCustomer.class);
+        if (verifyOne == null){
+            megMap.put("meg", "the user does not exist, checkin");
+        }else {
+            megMap.put("msg","successfully upsert new location");
+            Update update = new Update();
+            update.push("customerLocation",customerLocation);
+//            此处需要加入一个findAndModify设置，当状态为真时，将用户的状态也设置为真
+            mongoTemplate.upsert(query,update,MobileCustomer.class);
+        }
+        return megMap;
     }
 
     @Override
@@ -122,9 +130,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         System.out.println("--------------------------");
         System.out.println(mongoTemplate.find(query,MobileCustomer.class));
         List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
-        ListIterator<MobileCustomer> mobileCustomerListIterator = mobileCustomers.listIterator();
-        while (mobileCustomerListIterator.hasNext()){
-            MobileCustomer next = mobileCustomerListIterator.next();
+        for (MobileCustomer next : mobileCustomers) {
             System.out.println(next.getCustomerLocation());
         }
         System.out.println("----------------");
@@ -148,12 +154,30 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //        System.out.println(rawResults);
         return mobileCustomers;
     }
-
+// 查询用户的状态和全部信息
     @Override
     public List<MobileCustomer> findUserStatus(Boolean status) {
         Query query = new Query(Criteria.where("serviceStatus").is(status));
-        List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
-        System.out.println(mobileCustomers);
-        return mobileCustomers;
+        return mongoTemplate.find(query, MobileCustomer.class);
     }
+
+//    查询出用户的状态信息
+    @Override
+    public List<Map<Object,Boolean>> findEmbedDocument() {
+//        查询出还未进行服务的用户
+        Query query = new Query(Criteria.where("serviceStatus").is(Boolean.FALSE));
+        List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
+        List<Map<Object,Boolean>> mobileList = new LinkedList<>();
+        for (MobileCustomer mobileCustomer:mobileCustomers){
+            Map<Object,Boolean> statusMap = new HashMap<>();
+            statusMap.put(mobileCustomer.getMobileId(),mobileCustomer.getServiceStatus());
+            mobileList.add(statusMap);
+        }
+//    根据id查询用户的位置信息
+        Query queryEmbed = new Query(Criteria.where("customerLocation.userId").is(520));
+        List<MobileCustomer> customers = mongoTemplate.find(queryEmbed, MobileCustomer.class);
+//        增强for迭代出来
+        return mobileList;
+    }
+
 }

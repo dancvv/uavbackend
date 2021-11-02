@@ -16,7 +16,8 @@ public interface MobileCustomerRepository extends MongoRepository<MobileCustomer
 //    MobileCustomer findMobileCustomerByMobile_id(String id);
     void deleteMobileCustomerByMobileId (String id);
 //    @Query(value = "{'mobileId':")
-    List<MobileCustomer> findByMobileId();
+    @Query(value = "{}", fields = "{mobileId:1,serviceStatus:1}")
+    List<MobileCustomer> findByMobileIdAAndServiceStatus();
 
 
 }
