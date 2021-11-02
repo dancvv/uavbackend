@@ -21,4 +21,5 @@ public interface MobileCustomerService {
     Map<String,Object> insertManyMobileUsers(List<MobileCustomer> customerList);
     Map<String,Object> updateManyUsersLocation(List<CustomerLocation> customerLocationList);
     List<MobileCustomer> LocationCompare();
+    List<MobileCustomer>  findUserStatus(Boolean status);
 }

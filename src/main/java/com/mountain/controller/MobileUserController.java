@@ -54,4 +54,9 @@ public class MobileUserController {
     public List<MobileCustomer> calculateUsersLocation(){
         return mobileCustomerService.LocationCompare();
     }
+//    查询用户状态
+    @GetMapping("/status")
+    public List<MobileCustomer> getStatus(Boolean status){
+        return mobileCustomerService.findUserStatus(status);
+    }
 }

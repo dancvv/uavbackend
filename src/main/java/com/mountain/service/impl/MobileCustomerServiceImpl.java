@@ -4,14 +4,21 @@ import com.mountain.DAO.MobileCustomerRepository;
 import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
 import com.mountain.service.MobileCustomerService;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
 /**
  * @description:
@@ -112,16 +119,41 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //        查询某一个userid，得到其坐标
 //        查询到最新的坐标，根据最新坐标来计算覆盖范围是否在50m内
         query.fields().include("customerLocation");
+        System.out.println("--------------------------");
+        System.out.println(mongoTemplate.find(query,MobileCustomer.class));
         List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
         ListIterator<MobileCustomer> mobileCustomerListIterator = mobileCustomers.listIterator();
         while (mobileCustomerListIterator.hasNext()){
             MobileCustomer next = mobileCustomerListIterator.next();
             System.out.println(next.getCustomerLocation());
         }
+        System.out.println("----------------");
         System.out.println(mobileCustomers);
 //        List<MobileCustomer> byMobileId = mobileCustomerRepository.findByMobileId();
 //        System.out.println("--------------------------------------------");
 //        System.out.println(byMobileId);
+        TypedAggregation<MobileCustomer> aggregation = newAggregation(MobileCustomer.class,
+                project("mobileId"));
+        AggregationResults<MobileCustomer> aggregate = mongoTemplate.aggregate(aggregation, MobileCustomer.class);
+        AggregationResults<MobileCustomer> mobileId = mongoTemplate.aggregate(aggregation, "mobileId", MobileCustomer.class);
+        System.out.println("--------------------------------------mobileid");
+        List<MobileCustomer> mappedResults1 = mobileId.getMappedResults();
+        System.out.println(mappedResults1);
+        System.out.println("--------------------------------------");
+        Document rawResults = aggregate.getRawResults();
+        List<MobileCustomer> mappedResults = aggregate.getMappedResults();
+        for (MobileCustomer mappedResult : mappedResults) {
+            System.out.println(mappedResult);
+        }
+//        System.out.println(rawResults);
+        return mobileCustomers;
+    }
+
+    @Override
+    public List<MobileCustomer> findUserStatus(Boolean status) {
+        Query query = new Query(Criteria.where("serviceStatus").is(status));
+        List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
+        System.out.println(mobileCustomers);
         return mobileCustomers;
     }
 }

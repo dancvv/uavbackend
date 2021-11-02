@@ -25,7 +25,8 @@ public class MobileCustomer {
 //    默认为唯一值
     @Indexed(unique = true)
     private String mobileId;
-    private String serviceStatus;
+//    当前用户的服务状态
+    private Boolean serviceStatus;
 //    用户加入时间
     private Date createTime;
     private List<CustomerLocation> customerLocation;

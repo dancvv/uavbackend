@@ -20,6 +20,6 @@ public class testMobileUsers {
         MobileCustomer mobileCustomer = new MobileCustomer();
         mobileCustomer.setMobileId("black_mountain_1001");
         mobileCustomer.setCreateTime(new Date());
-        mobileCustomer.setServiceStatus("unserved");
+        mobileCustomer.setServiceStatus(Boolean.FALSE);
     }
 }

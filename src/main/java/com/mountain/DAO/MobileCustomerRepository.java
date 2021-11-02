@@ -18,4 +18,5 @@ public interface MobileCustomerRepository extends MongoRepository<MobileCustomer
 //    @Query(value = "{'mobileId':")
     List<MobileCustomer> findByMobileId();
 
+
 }
