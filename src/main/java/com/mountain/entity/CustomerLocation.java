@@ -22,6 +22,8 @@ public class CustomerLocation {
     private Boolean status;
 //    服务时间
     private Date serviceTime;
+//    服务逻辑判断，0：可搜索，1：搜索基准，2：废弃点，不参与搜索
+    private int logicStatus;
     private GeoJsonPoint geoPoint;
 
 }

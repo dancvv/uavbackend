@@ -55,6 +55,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         }else {
             megMap.put("msg","successfully upsert new location");
             Update update = new Update();
+            customerLocation.setLogicStatus(0);
             update.push("customerLocation",customerLocation);
 //            此处需要加入一个findAndModify设置，当状态为真时，将用户的状态也设置为真
             mongoTemplate.upsert(query,update,MobileCustomer.class);
@@ -105,12 +106,15 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //        CustomerLocation tempLocation = new CustomerLocation();
         for (CustomerLocation customerLocation : customerLocationList) {
             Query query = new Query(Criteria.where("mobileId").is(customerLocation.getUserId()));
+//            管他是不是0，全设置为0
+            customerLocation.setLogicStatus(customerLocation.getLogicStatus() != 0 ? 0 : 0);
             MobileCustomer verifyOne = mongoTemplate.findOne(query, MobileCustomer.class);
             if (verifyOne == null) {
                 megMap.put("meg", "the user does not exist, checkin");
             } else {
                 Query queryUsers = new Query(Criteria.where("mobileId").is(customerLocation.getUserId()));
                 Update update = new Update();
+                update.push("customLocation",customerLocation);
                 mongoTemplate.upsert(queryUsers, update, MobileCustomer.class);
                 megMap.put("meg","successfully insert");
             }
@@ -174,9 +178,10 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             mobileList.add(statusMap);
         }
 //    根据id查询用户的位置信息
-        Query queryEmbed = new Query(Criteria.where("customerLocation.userId").is(520));
-        List<MobileCustomer> customers = mongoTemplate.find(queryEmbed, MobileCustomer.class);
+        Query queryEmbed = new Query(Criteria.where("customerLocation.userId").is("520"));
 //        增强for迭代出来
+        MobileCustomer one = mongoTemplate.findOne(queryEmbed, MobileCustomer.class);
+        System.out.println(one);
         return mobileList;
     }
 
