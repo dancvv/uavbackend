@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -17,8 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 /**
  * @description:
@@ -55,7 +55,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         }else {
             megMap.put("msg","successfully upsert new location");
             Update update = new Update();
-            customerLocation.setLogicStatus(0);
+//            customerLocation.setLogicStatus(1);
             update.push("customerLocation",customerLocation);
 //            此处需要加入一个findAndModify设置，当状态为真时，将用户的状态也设置为真
             mongoTemplate.upsert(query,update,MobileCustomer.class);
@@ -168,20 +168,56 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //    查询出用户的状态信息
     @Override
     public List<Map<Object,Boolean>> findEmbedDocument() {
+//        存入位置
+        List<CustomerLocation> customerLocation = null;
 //        查询出还未进行服务的用户
         Query query = new Query(Criteria.where("serviceStatus").is(Boolean.FALSE));
         List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
         List<Map<Object,Boolean>> mobileList = new LinkedList<>();
+        ArrayList<String> userList = new ArrayList<>();
+//        存储位置
+        List<GeoJsonPoint> jsonPointsList = new ArrayList<>();
         for (MobileCustomer mobileCustomer:mobileCustomers){
             Map<Object,Boolean> statusMap = new HashMap<>();
             statusMap.put(mobileCustomer.getMobileId(),mobileCustomer.getServiceStatus());
+            userList.add(mobileCustomer.getMobileId());
             mobileList.add(statusMap);
         }
-//    根据id查询用户的位置信息
-        Query queryEmbed = new Query(Criteria.where("customerLocation.userId").is("520"));
-//        增强for迭代出来
-        MobileCustomer one = mongoTemplate.findOne(queryEmbed, MobileCustomer.class);
-        System.out.println(one);
+        for (String list:userList){
+            System.out.println(list);
+            Query queryCheck = new Query(Criteria.where("mobileId").is(list).and("customerLocation.logicStatus").is(1));
+            MobileCustomer checkOne = mongoTemplate.findOne(queryCheck, MobileCustomer.class);
+            if (checkOne != null){
+                System.out.println("----------");
+                System.out.println(checkOne);
+            }
+//            for (CustomerLocation binLocation:customerLocation){
+//                if (binLocation.getLogicStatus() == 1){
+//                    jsonPointsList.add(binLocation.getGeoPoint());
+//                    System.out.println(binLocation.getGeoPoint());
+//                }
+//            }
+
+//            防置指针问题
+//            System.out.println(checkOne);
+//            if (checkOne != null){
+//                checkOne.ge
+//            }
+//            System.out.println("+++++++++++++++++++++++++++");
+//            CustomerLocation checkOneLogic = (CustomerLocation) checkOne.getCustomerLocation();
+//            int logicStatus = checkOneLogic.getLogicStatus();
+//            if (logicStatus == 1)
+//            System.out.println(checkOne.getCustomerLocation());
+        }
+//        如果存在为1的点，以这个点为基准，参与后续的计算表达式
+//        Query queryOne = new Query(Criteria.where("customerLocation.logicStatus").is(1));
+////    根据id查询用户的位置信息
+//        Query queryEmbed = new Query(Criteria.where("customerLocation.userId").is("520"));
+////        增强for迭代出来
+//        MobileCustomer one = mongoTemplate.findOne(queryEmbed, MobileCustomer.class);
+//        System.out.println(one);
+
+        Aggregation aggregation = newAggregation(unwind("customerLocation"),group("customerLocation."));
         return mobileList;
     }
 
