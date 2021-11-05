@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 /**
@@ -215,8 +216,17 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         }
         System.out.println(mobileLocation);
 //        根据坐标点进行计算，判断坐标是否超出
+//        改变代码逻辑，每次都是新的点与基准点进行计算
         for (String list:userList){
             System.out.println(mobileLocation.get(list));
+            Query queryDistance = new Query(Criteria.where("mobileId").is(list));
+            TypedAggregation aggregation = newAggregation(MobileCustomer.class,
+                    unwind("customerLocation"),
+                    match(Criteria.where("mobileId").is(list)),
+                    sort(DESC,"customerLocation.serviceTime"),
+                    project("mobileId").and("customerLocation"),
+                    limit(1));
+            AggregationResults<MobileCustomer> aggregateResult = mongoTemplate.aggregate(aggregation, MobileCustomer.class);
 
         }
 
