@@ -7,7 +7,6 @@ import com.mountain.service.MobileCustomerService;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
@@ -220,14 +219,19 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         for (String list:userList){
             System.out.println(mobileLocation.get(list));
             Query queryDistance = new Query(Criteria.where("mobileId").is(list));
-            TypedAggregation aggregation = newAggregation(MobileCustomer.class,
+            TypedAggregation<MobileCustomer> aggregation = newAggregation(MobileCustomer.class,
                     unwind("customerLocation"),
                     match(Criteria.where("mobileId").is(list)),
                     sort(DESC,"customerLocation.serviceTime"),
                     project("mobileId").and("customerLocation"),
                     limit(1));
+//            得到最新坐标
             AggregationResults<MobileCustomer> aggregateResult = mongoTemplate.aggregate(aggregation, MobileCustomer.class);
+            aggregateResult.getRawResults();
+//            此处计算两个点的距离，并进行判断，两个点不能超过50m
 
+//            如果超过50m，革新点,得到新的坐标点，返回前端，返回mysql，重新计算
+            mobileLocation.replace(list,newJson)
         }
 
 //        return mobileList;
