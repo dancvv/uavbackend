@@ -22,5 +22,5 @@ public interface MobileCustomerService {
     Map<String,Object> updateManyUsersLocation(List<CustomerLocation> customerLocationList);
     List<MobileCustomer> LocationCompare();
     List<MobileCustomer>  findUserStatus(Boolean status);
-    List<Map<Object,Boolean>> findEmbedDocument();
+    void findEmbedDocument();
 }

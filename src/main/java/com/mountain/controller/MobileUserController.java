@@ -62,7 +62,8 @@ public class MobileUserController {
     }
 //    查询内嵌文档
     @GetMapping("/mobileid")
-    public List<Map<Object,Boolean>> getMobilId(){
-        return mobileCustomerService.findEmbedDocument();
+    public List<Map<Object, Boolean>> getMobilId(){
+        mobileCustomerService.findEmbedDocument();
+        return null;
     }
 }

@@ -167,13 +167,12 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 
 //    查询出用户的状态信息
     @Override
-    public List<Map<Object,Boolean>> findEmbedDocument() {
-//        存入位置
-        List<CustomerLocation> customerLocation = null;
+    public void findEmbedDocument() {
 //        查询出还未进行服务的用户
         Query query = new Query(Criteria.where("serviceStatus").is(Boolean.FALSE));
         List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
         List<Map<Object,Boolean>> mobileList = new LinkedList<>();
+        Map<Object,GeoJsonPoint> mobileLocation = new HashMap<>();
         ArrayList<String> userList = new ArrayList<>();
 //        存储位置
         List<GeoJsonPoint> jsonPointsList = new ArrayList<>();
@@ -183,42 +182,34 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             userList.add(mobileCustomer.getMobileId());
             mobileList.add(statusMap);
         }
-        for (String list:userList){
+        for (String list:userList) {
             System.out.println(list);
-            Query queryCheck = new Query(Criteria.where("mobileId").is(list).and("customerLocation.logicStatus").is(1));
-            MobileCustomer checkOne = mongoTemplate.findOne(queryCheck, MobileCustomer.class);
-            if (checkOne != null){
-                System.out.println("----------");
-                System.out.println(checkOne);
+//            查询有基准点的用户
+            Query queryLocation = new Query(Criteria.where("mobileId").is(list));
+            queryLocation.fields().elemMatch("customerLocation", Criteria.where("logicStatus").is(1));
+            queryLocation.fields().include("mobileId");
+            MobileCustomer one = mongoTemplate.findOne(queryLocation, MobileCustomer.class);
+            if (one.getCustomerLocation() != null) {
+                System.out.println("_________not null___________");
+                List<CustomerLocation> customerLocation1 = one.getCustomerLocation();
+                mobileLocation.put(one.getMobileId(), customerLocation1.get(0).getGeoPoint());
+//                System.out.println(tempLocation.getGeoPoint());
+            } else {
+                System.out.println("-------------null-------------");
+//                查询时间最早的点，没有基准点的用户
+                Query queryTime = new Query(Criteria.where("mobileId").is(list));
+                queryTime.fields().elemMatch("customerLocation",Criteria.where("logicStatus").is(0));
+                queryTime.fields().include("mobileId");
+                MobileCustomer one1 = mongoTemplate.findOne(queryTime, MobileCustomer.class);
+                GeoJsonPoint geoPoint = one1.getCustomerLocation().get(0).getGeoPoint();
+                mobileLocation.put(one1.getMobileId(),geoPoint);
+                System.out.println(one1);
             }
-//            for (CustomerLocation binLocation:customerLocation){
-//                if (binLocation.getLogicStatus() == 1){
-//                    jsonPointsList.add(binLocation.getGeoPoint());
-//                    System.out.println(binLocation.getGeoPoint());
-//                }
-//            }
 
-//            防置指针问题
-//            System.out.println(checkOne);
-//            if (checkOne != null){
-//                checkOne.ge
-//            }
-//            System.out.println("+++++++++++++++++++++++++++");
-//            CustomerLocation checkOneLogic = (CustomerLocation) checkOne.getCustomerLocation();
-//            int logicStatus = checkOneLogic.getLogicStatus();
-//            if (logicStatus == 1)
-//            System.out.println(checkOne.getCustomerLocation());
         }
-//        如果存在为1的点，以这个点为基准，参与后续的计算表达式
-//        Query queryOne = new Query(Criteria.where("customerLocation.logicStatus").is(1));
-////    根据id查询用户的位置信息
-//        Query queryEmbed = new Query(Criteria.where("customerLocation.userId").is("520"));
-////        增强for迭代出来
-//        MobileCustomer one = mongoTemplate.findOne(queryEmbed, MobileCustomer.class);
-//        System.out.println(one);
-
+        System.out.println(mobileLocation);
         Aggregation aggregation = newAggregation(unwind("customerLocation"),group("customerLocation."));
-        return mobileList;
+//        return mobileList;
     }
 
 }
