@@ -35,8 +35,15 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     public Map<String,Object> insertMobileUsers(MobileCustomer mobileCustomer) {
         Map<String,Object> megMap = new HashMap<>();
         try{
-            mobileCustomerRepository.insert(mobileCustomer);
-            megMap.put("msg","successfully add");
+//            需要加入判断机制，判断添加的用户唯一存在
+            Query query = new Query(Criteria.where("mobileId").is(mobileCustomer.getMobileId()));
+            MobileCustomer one = mongoTemplate.findOne(query, MobileCustomer.class);
+            if (one!=null){
+                megMap.put("error","this user has already exists");
+            }else {
+                mobileCustomerRepository.insert(mobileCustomer);
+                megMap.put("msg","successfully add");
+            }
         }catch (Exception e){
             System.out.println(e);
             megMap.put("msg","something wrong happened");
@@ -175,7 +182,6 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         Map<Object,GeoJsonPoint> mobileLocation = new HashMap<>();
         ArrayList<String> userList = new ArrayList<>();
 //        存储位置
-        List<GeoJsonPoint> jsonPointsList = new ArrayList<>();
         for (MobileCustomer mobileCustomer:mobileCustomers){
             Map<Object,Boolean> statusMap = new HashMap<>();
             statusMap.put(mobileCustomer.getMobileId(),mobileCustomer.getServiceStatus());
@@ -203,12 +209,17 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
                 MobileCustomer one1 = mongoTemplate.findOne(queryTime, MobileCustomer.class);
                 GeoJsonPoint geoPoint = one1.getCustomerLocation().get(0).getGeoPoint();
                 mobileLocation.put(one1.getMobileId(),geoPoint);
-                System.out.println(one1);
+//                System.out.println(one1);
             }
 
         }
         System.out.println(mobileLocation);
-        Aggregation aggregation = newAggregation(unwind("customerLocation"),group("customerLocation."));
+//        根据坐标点进行计算，判断坐标是否超出
+        for (String list:userList){
+            System.out.println(mobileLocation.get(list));
+
+        }
+
 //        return mobileList;
     }
 

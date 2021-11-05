@@ -23,7 +23,7 @@ public class MobileCustomer {
     @Id
     private String id;
 //    默认为唯一值
-    @Indexed(unique = true)
+//    @Indexed(unique = true)
     private String mobileId;
 //    当前用户的服务状态
     private Boolean serviceStatus;

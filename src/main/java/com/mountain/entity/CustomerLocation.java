@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.util.Date;
 
@@ -24,6 +25,7 @@ public class CustomerLocation {
     private Date serviceTime;
 //    服务逻辑判断，0：可搜索，1：搜索基准，2：废弃点，不参与搜索
     private int logicStatus;
+//    @Indexed()
     private GeoJsonPoint geoPoint;
 
 }
