@@ -1,12 +1,16 @@
 package com.mountain.service.impl;
 
 import com.mountain.DAO.MobileCustomerRepository;
+import com.mountain.entity.AggrMobileResults;
 import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
 import com.mountain.service.MobileCustomerService;
 import org.bson.Document;
+import org.gavaghan.geodesy.Ellipsoid;
+import org.gavaghan.geodesy.GlobalCoordinates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
@@ -31,6 +35,8 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     private MobileCustomerRepository mobileCustomerRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
+    @Autowired
+    private CommonUtilsServiceImpl commonUtilsService;
     @Override
     public Map<String,Object> insertMobileUsers(MobileCustomer mobileCustomer) {
         Map<String,Object> megMap = new HashMap<>();
@@ -217,23 +223,33 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //        根据坐标点进行计算，判断坐标是否超出
 //        改变代码逻辑，每次都是新的点与基准点进行计算
         for (String list:userList){
-            System.out.println(mobileLocation.get(list));
-            Query queryDistance = new Query(Criteria.where("mobileId").is(list));
-            TypedAggregation<MobileCustomer> aggregation = newAggregation(MobileCustomer.class,
+//            System.out.println(mobileLocation.get(list));
+            System.out.println(list);
+//            每次取到最新的值
+            Aggregation aggregation = newAggregation(MobileCustomer.class,
                     unwind("customerLocation"),
                     match(Criteria.where("mobileId").is(list)),
                     sort(DESC,"customerLocation.serviceTime"),
-                    project("mobileId").and("customerLocation"),
-                    limit(1));
+//                    project("mobileId","serviceStatus","customerLocation.geoPoint","customerLocation.serviceTime"),
+                    project("customerLocation.geoPoint","mobileId"),
+                    limit(1)
+                    );
 //            得到最新坐标
-            AggregationResults<MobileCustomer> aggregateResult = mongoTemplate.aggregate(aggregation, MobileCustomer.class);
-            aggregateResult.getRawResults();
+            AggregationResults<AggrMobileResults> aggregateResult = mongoTemplate.aggregate(aggregation,"mobileCustomer", AggrMobileResults.class);
+            System.out.println(aggregateResult.getMappedResults());
+            AggrMobileResults target = aggregateResult.getMappedResults().get(0);
+//            计算两个点之间的距离
+            GlobalCoordinates targetCoord = new GlobalCoordinates(target.getGeoPoint().getX(), target.getGeoPoint().getY());
+            GlobalCoordinates sourceCoord = new GlobalCoordinates(mobileLocation.get(list).getX(), mobileLocation.get(list).getY());
+            double distance = commonUtilsService.calculateGeoPointsDistance(sourceCoord, targetCoord, Ellipsoid.WGS84);
+            System.out.println("juli"+distance);
 //            此处计算两个点的距离，并进行判断，两个点不能超过50m
-
 //            如果超过50m，革新点,得到新的坐标点，返回前端，返回mysql，重新计算
-            mobileLocation.replace(list,newJson)
+            if (distance >= 50){
+                mobileLocation.replace(list,target.getGeoPoint());
+            }
         }
-
+        System.out.println(mobileLocation);
 //        return mobileList;
     }
 

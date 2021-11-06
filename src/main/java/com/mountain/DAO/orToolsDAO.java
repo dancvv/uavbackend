@@ -110,6 +110,4 @@ public class orToolsDAO {
         return locaList;
     }
 
-
-
 }
