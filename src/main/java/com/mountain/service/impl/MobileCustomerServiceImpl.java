@@ -182,7 +182,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 
 //    查询出用户的状态信息
     @Override
-    public void findEmbedDocument() {
+    public Map<Object,GeoJsonPoint> queryAndUpdateLocation() {
 //        查询出还未进行服务的用户
         Query query = new Query(Criteria.where("serviceStatus").is(Boolean.FALSE));
         List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
@@ -250,11 +250,15 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             if (distance >= 50){
 //                重新设置规划数据
                 mobileLocation.replace(list,target.getGeoPoint());
-//                抛弃所有status为0的坐标
+//                抛弃所有status为0的坐标，将这些坐标status都设置为2
                 updateOneUsersLogicStatus(list);
+//                设置唯一的一个坐标状态为1
+                setOneUserLogicStatus(target.getGeoPoint());
             }
         }
         System.out.println(mobileLocation);
+//        将更新的坐标集合发送出去
+        return mobileLocation;
 //        return mobileList;
     }
 //    将所有用户的logic状态更新为废弃状态2
@@ -269,7 +273,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     }
 
     @Override
-    public void updateOneUserLogicStatus(GeoJsonPoint jsonPoint) {
+    public void setOneUserLogicStatus(GeoJsonPoint jsonPoint) {
         Query query = new Query(Criteria.where("customerLocation.geoPoint").is(jsonPoint));
         AggregationUpdate aggregationOne = newUpdate();
         aggregationOne.set("customerLocation.logicStatus");

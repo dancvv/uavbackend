@@ -24,7 +24,7 @@ public interface MobileCustomerService {
     Map<String,Object> updateManyUsersLocation(List<CustomerLocation> customerLocationList);
     List<MobileCustomer> LocationCompare();
     List<MobileCustomer>  findUserStatus(Boolean status);
-    void findEmbedDocument();
+    Map<Object,GeoJsonPoint> queryAndUpdateLocation();
     UpdateResult updateOneUsersLogicStatus(String userId);
-    void updateOneUserLogicStatus(GeoJsonPoint jsonPoint);
+    void setOneUserLogicStatus(GeoJsonPoint jsonPoint);
 }
