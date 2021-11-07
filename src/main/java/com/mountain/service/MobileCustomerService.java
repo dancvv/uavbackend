@@ -3,6 +3,7 @@ package com.mountain.service;
 import com.mongodb.client.result.UpdateResult;
 import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.util.List;
 import java.util.Map;
@@ -25,4 +26,5 @@ public interface MobileCustomerService {
     List<MobileCustomer>  findUserStatus(Boolean status);
     void findEmbedDocument();
     UpdateResult updateOneUsersLogicStatus(String userId);
+    void updateOneUserLogicStatus(GeoJsonPoint jsonPoint);
 }

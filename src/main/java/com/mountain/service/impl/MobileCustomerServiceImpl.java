@@ -250,12 +250,14 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             if (distance >= 50){
 //                重新设置规划数据
                 mobileLocation.replace(list,target.getGeoPoint());
+//                抛弃所有status为0的坐标
+                updateOneUsersLogicStatus(list);
             }
         }
         System.out.println(mobileLocation);
 //        return mobileList;
     }
-//    将所有用户的logic状态更新为废弃点2
+//    将所有用户的logic状态更新为废弃状态2
     @Override
     public UpdateResult updateOneUsersLogicStatus(String userId) {
 //        将所有大于0小于1的数据全部设置为2
@@ -264,6 +266,15 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         aggregationUpdate.set("customerLocation.logicStatus").toValue(2);
         //        System.out.println(all);
         return mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationUpdate).all();
+    }
+
+    @Override
+    public void updateOneUserLogicStatus(GeoJsonPoint jsonPoint) {
+        Query query = new Query(Criteria.where("customerLocation.geoPoint").is(jsonPoint));
+        AggregationUpdate aggregationOne = newUpdate();
+        aggregationOne.set("customerLocation.logicStatus");
+        UpdateResult result = mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationOne).all();
+        System.out.println(result);
     }
 
 }
