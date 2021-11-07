@@ -1,5 +1,6 @@
 package com.mountain.service;
 
+import com.mongodb.client.result.UpdateResult;
 import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
 
@@ -23,4 +24,5 @@ public interface MobileCustomerService {
     List<MobileCustomer> LocationCompare();
     List<MobileCustomer>  findUserStatus(Boolean status);
     void findEmbedDocument();
+    UpdateResult updateOneUsersLogicStatus(String userId);
 }

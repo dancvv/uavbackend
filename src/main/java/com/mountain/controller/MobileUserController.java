@@ -1,5 +1,6 @@
 package com.mountain.controller;
 
+import com.mongodb.client.result.UpdateResult;
 import com.mountain.DAO.MobileCustomerRepository;
 import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
@@ -65,5 +66,10 @@ public class MobileUserController {
     public List<Map<Object, Boolean>> getMobilId(){
         mobileCustomerService.findEmbedDocument();
         return null;
+    }
+//    根据文档id查询
+    @GetMapping("/setlogicsta")
+    public UpdateResult updateLogicStaById(@RequestParam String userId){
+        return mobileCustomerService.updateOneUsersLogicStatus(userId);
     }
 }

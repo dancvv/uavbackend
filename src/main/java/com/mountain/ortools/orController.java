@@ -70,7 +70,7 @@ public class orController {
     }
 //    规划路线
     @PostMapping("/plan")
-    public Map<String,Object> routePlan(@RequestParam Integer vehicleNumber ,@RequestParam Integer depot){
+    public Map<String,Object> routeParamAndPlan(@RequestParam Integer vehicleNumber ,@RequestParam Integer depot){
         Map<String,Object> infoMap=new HashMap<>();
 //        距离矩阵
         List<Location> locationList = positionService.list();

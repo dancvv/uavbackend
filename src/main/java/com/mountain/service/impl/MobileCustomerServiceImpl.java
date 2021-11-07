@@ -1,5 +1,6 @@
 package com.mountain.service.impl;
 
+import com.mongodb.client.result.UpdateResult;
 import com.mountain.DAO.MobileCustomerRepository;
 import com.mountain.entity.AggrMobileResults;
 import com.mountain.entity.CustomerLocation;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.AggregationUpdate;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -242,15 +244,26 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             GlobalCoordinates targetCoord = new GlobalCoordinates(target.getGeoPoint().getX(), target.getGeoPoint().getY());
             GlobalCoordinates sourceCoord = new GlobalCoordinates(mobileLocation.get(list).getX(), mobileLocation.get(list).getY());
             double distance = commonUtilsService.calculateGeoPointsDistance(sourceCoord, targetCoord, Ellipsoid.WGS84);
-            System.out.println("juli"+distance);
+            System.out.println("juli "+distance);
 //            此处计算两个点的距离，并进行判断，两个点不能超过50m
 //            如果超过50m，革新点,得到新的坐标点，返回前端，返回mysql，重新计算
             if (distance >= 50){
+//                重新设置规划数据
                 mobileLocation.replace(list,target.getGeoPoint());
             }
         }
         System.out.println(mobileLocation);
 //        return mobileList;
+    }
+//    将所有用户的logic状态更新为废弃点2
+    @Override
+    public UpdateResult updateOneUsersLogicStatus(String userId) {
+//        将所有大于0小于1的数据全部设置为2
+        Query query = new Query(Criteria.where("customerLocation.userId").is(userId).and("customerLocation.logicStatus").gte(0).lte(1));
+        AggregationUpdate aggregationUpdate = newUpdate();
+        aggregationUpdate.set("customerLocation.logicStatus").toValue(2);
+        //        System.out.println(all);
+        return mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationUpdate).all();
     }
 
 }
