@@ -4,7 +4,6 @@ import com.mountain.DAO.orToolsDAO;
 import com.mountain.Mapper.LocaMapper;
 import com.mountain.entity.Location;
 import com.mountain.service.impl.PositionServiceImpl;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -3,6 +3,9 @@ package com.mountain.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 /**
@@ -16,5 +19,6 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 public class AggrMobileResults {
     private String id;
     private String mobileId;
-    protected GeoJsonPoint geoPoint;
+    private GeoJsonPoint geoPoint;
+    private Date serviceTime;    
 }

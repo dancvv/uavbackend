@@ -1,7 +1,6 @@
 package com.mountain.controller;
 
 import com.mongodb.client.result.UpdateResult;
-import com.mountain.DAO.MobileCustomerRepository;
 import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
 import com.mountain.service.impl.MobileCustomerServiceImpl;

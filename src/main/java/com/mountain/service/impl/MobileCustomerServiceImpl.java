@@ -194,10 +194,12 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             Map<Object,Boolean> statusMap = new HashMap<>();
             statusMap.put(mobileCustomer.getMobileId(),mobileCustomer.getServiceStatus());
             userList.add(mobileCustomer.getMobileId());
+            // System.out.println(mobileCustomer.getMobileId());
             mobileList.add(statusMap);
         }
+        // System.out.println("the len of "+userList.size());
         for (String list:userList) {
-            System.out.println(list);
+            System.out.println("user "+list);
 //            查询有基准点的用户
             Query queryLocation = new Query(Criteria.where("mobileId").is(list));
             queryLocation.fields().elemMatch("customerLocation", Criteria.where("logicStatus").is(1));
@@ -233,7 +235,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
                     match(Criteria.where("mobileId").is(list)),
                     sort(DESC,"customerLocation.serviceTime"),
 //                    project("mobileId","serviceStatus","customerLocation.geoPoint","customerLocation.serviceTime"),
-                    project("customerLocation.geoPoint","mobileId"),
+                    project("mobileId","customerLocation.geoPoint","customerLocation.serviceTime"),
                     limit(1)
                     );
 //            得到最新坐标
@@ -251,9 +253,10 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //                重新设置规划数据
                 mobileLocation.replace(list,target.getGeoPoint());
 //                抛弃所有status为0的坐标，将这些坐标status都设置为2
-                updateOneUsersLogicStatus(list);
-//                设置唯一的一个坐标状态为1
-                setOneUserLogicStatus(target.getGeoPoint());
+                UpdateResult result = updateOneUsersLogicStatus(list);
+                System.out.println(result);
+//                根据用户id设置唯一的一个坐标状态为1,再加入时间，保证唯一性
+                setOneUserLogicStatus(list,target.getServiceTime(),target.getGeoPoint());
             }
         }
         System.out.println(mobileLocation);
@@ -267,16 +270,18 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //        将所有大于0小于1的数据全部设置为2
         Query query = new Query(Criteria.where("customerLocation.userId").is(userId).and("customerLocation.logicStatus").gte(0).lte(1));
         AggregationUpdate aggregationUpdate = newUpdate();
-        aggregationUpdate.set("customerLocation.logicStatus").toValue(2);
+        aggregationUpdate.set("customerLocation.logicStatus").toValue(0);
         //        System.out.println(all);
         return mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationUpdate).all();
     }
 
     @Override
-    public void setOneUserLogicStatus(GeoJsonPoint jsonPoint) {
-        Query query = new Query(Criteria.where("customerLocation.geoPoint").is(jsonPoint));
+    public void setOneUserLogicStatus(String userId,Date moveTimeStamp,GeoJsonPoint jsonPoint) {
+        // 根据id和用户坐标同时设置
+        Query query = new Query(Criteria.where("mobileId").is(userId).and("customerLocation.geoPoint").is(jsonPoint));
         AggregationUpdate aggregationOne = newUpdate();
-        aggregationOne.set("customerLocation.logicStatus");
+        // 匹配项logic status 设置为1
+        aggregationOne.set("customerLocation.logicStatus").toValue(1);
         UpdateResult result = mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationOne).all();
         System.out.println(result);
     }
