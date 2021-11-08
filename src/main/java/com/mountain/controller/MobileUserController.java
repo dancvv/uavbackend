@@ -5,10 +5,10 @@ import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
 import com.mountain.service.impl.MobileCustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -56,18 +56,17 @@ public class MobileUserController {
     public List<MobileCustomer> calculateUsersLocation(){
         return mobileCustomerService.LocationCompare();
     }
-//    查询用户状态
-    @GetMapping("/status")
+//    查询所有用户的状态信息
+    @GetMapping("/getstatus")
     public List<MobileCustomer> getStatus(Boolean status){
         return mobileCustomerService.findUserStatus(status);
     }
-//    查询内嵌文档
-    @GetMapping("/mobileid")
-    public Map<Object, Boolean> getMobilId(){
-        mobileCustomerService.queryAndUpdateLocation();
-        return null;
+//    查询出用户的logic信息，并更新
+    @GetMapping("/updateLocation")
+    public Map<Object, GeoJsonPoint> queryAndUpdateLocation(){
+        return mobileCustomerService.queryAndUpdateLocation();
     }
-//    根据文档id查询
+//    根据文档id查询,并将所有用户的logic状态更新为废弃状态2
     @GetMapping("/setlogicsta")
     public UpdateResult updateLogicStaById(@RequestParam String userId){
         return mobileCustomerService.updateOneUsersLogicStatus(userId);

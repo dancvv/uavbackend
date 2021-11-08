@@ -24,8 +24,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import javax.sound.midi.Soundbank;
-
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
@@ -183,7 +181,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         return mongoTemplate.find(query, MobileCustomer.class);
     }
 
-//    查询出用户的状态信息
+//    查询出用户的当前状态信息并更新
     @Override
     public Map<Object,GeoJsonPoint> queryAndUpdateLocation() {
 //        查询出还未进行服务的用户
@@ -197,10 +195,8 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             Map<Object,Boolean> statusMap = new HashMap<>();
             statusMap.put(mobileCustomer.getMobileId(),mobileCustomer.getServiceStatus());
             userList.add(mobileCustomer.getMobileId());
-            // System.out.println(mobileCustomer.getMobileId());
             mobileList.add(statusMap);
         }
-        // System.out.println("the len of "+userList.size());
         for (String list:userList) {
             System.out.println("user "+list);
 //            查询有基准点的用户
@@ -222,11 +218,9 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
                 MobileCustomer one1 = mongoTemplate.findOne(queryTime, MobileCustomer.class);
                 GeoJsonPoint geoPoint = one1.getCustomerLocation().get(0).getGeoPoint();
                 mobileLocation.put(one1.getMobileId(),geoPoint);
-//                System.out.println(one1);
             }
 
         }
-        System.out.println(mobileLocation);
 //        根据坐标点进行计算，判断坐标是否超出
 //        改变代码逻辑，每次都是新的点与基准点进行计算
         for (String list:userList){
@@ -257,28 +251,27 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //                重新设置规划数据
                 mobileLocation.replace(list,target.getGeoPoint());
 //                抛弃所有status为0的坐标，将这些坐标status都设置为2
-                UpdateResult result = updateOneUsersLogicStatus(list);
-                System.out.println(result);
+                updateOneUsersLogicStatus(list);
 //                根据用户id设置唯一的一个坐标状态为1,再加入时间，保证唯一性
-
-                System.out.println(target.getServiceTime());
                 setOneUserLogicStatus(list,target.getServiceTime(),target.getGeoPoint());
             }
         }
-        System.out.println(mobileLocation);
+        // System.out.println(mobileLocation);
 //        将更新的坐标集合发送出去
         return mobileLocation;
 //        return mobileList;
     }
 //    将所有用户的logic状态更新为废弃状态2
     @Override
-    public UpdateResult updateOneUsersLogicStatus(String userId) {
+    public void updateOneUsersLogicStatus(String userId) {
 //        将所有大于0小于1的数据全部设置为2
         Query query = new Query(Criteria.where("customerLocation.userId").is(userId).and("customerLocation.logicStatus").gte(0).lte(1));
         AggregationUpdate aggregationUpdate = newUpdate();
         aggregationUpdate.set("customerLocation.logicStatus").toValue(2);
         //        System.out.println(all);
-        return mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationUpdate).all();
+        UpdateResult result = mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationUpdate).all();
+        System.out.println("all set to 2");
+        System.out.println(result);
     }
 
     @Override
@@ -287,15 +280,15 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         System.out.println(moveTimeStamp);
         Query query = new Query(Criteria.where("mobileId").is(userId).and("customerLocation.geoPoint").is(jsonPoint).and("customerLocation.serviceTime").is(moveTimeStamp));
         // AggregationUpdate aggregationOne = newUpdate();
-        // // 匹配项logic status 设置为1
         // aggregationOne.set("customerLocation.logicStatus").toValue(1);
         // UpdateResult result = mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationOne).all();
 
+        // 匹配项logic status 设置为1
         Update update = new Update();
         update.set("customerLocation.$.logicStatus", 1);
         UpdateResult rls = mongoTemplate.updateFirst(query, update, MobileCustomer.class);
-        System.out.println(rls);
         System.out.println("update ONE: ");
+        System.out.println(rls);
         // System.out.println(result);
     }
 

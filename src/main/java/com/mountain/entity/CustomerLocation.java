@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @description:

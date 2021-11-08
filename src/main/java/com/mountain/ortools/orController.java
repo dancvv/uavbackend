@@ -108,15 +108,16 @@ public class orController {
     }
 //    上传移动用户的当前位置
     @GetMapping("passengermoving")
-    public Map<Object, ArrayList<Integer>> uploadMovingPassenger(){
-        final int[] starts={12,5,6,9};
-        final int[] stop={0,0,0,0};
+    public Map<Object, ArrayList<Integer>> uploadMovingPassenger(int[] starts,int vehicleNum){
+
+        final int[] stop = new int[starts.length];
         List<Location> locationList = positionService.list();
+//        距离矩阵计算
         final Double[][] locationMatrix = ordao.locationMatrix(locationList);
         final Long[][] distanceMatrix = ordao.computeDistance(locationMatrix);
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
-        Map<Object, ArrayList<Integer>> routeList =positionService.movePassengerPlan(distanceMatrix,4,starts,stop);
+        Map<Object, ArrayList<Integer>> routeList =positionService.movePassengerPlan(distanceMatrix,vehicleNum,starts,stop);
         return routeList;
     }
 }

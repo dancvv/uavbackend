@@ -108,7 +108,7 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         Assignment solution = computeService(manager, distanceMatrix, vehicleNumber,routing);
         return ordao.printSolution(vehicleNumber, routing, manager, solution);
     }
-//    MDVRP路线规划
+//    MDVRP路线规划,多场站路线规划
     public Map<Object, ArrayList<Integer>> movePassengerPlan(Long[][] tempDistanceMatrix, Integer vehicleNumber , int[] startPosition, int[] depot){
         Loader.loadNativeLibraries();
         RoutingIndexManager mdVRPmanager=new RoutingIndexManager(tempDistanceMatrix.length,
