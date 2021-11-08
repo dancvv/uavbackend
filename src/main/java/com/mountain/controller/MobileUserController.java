@@ -7,6 +7,7 @@ import com.mountain.service.impl.MobileCustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +24,12 @@ public class MobileUserController {
     private MobileCustomerServiceImpl mobileCustomerService;
     @PostMapping("/saveusers")
     public Map<String,Object> insertMobileUser(MobileCustomer mobileCustomer){
-        mobileCustomer.setCreateTime(new Date());
+        mobileCustomer.setCreateTime(LocalDateTime.now());
         return mobileCustomerService.insertMobileUsers(mobileCustomer);
     }
     @PostMapping("/onelocation")
     public Map<String,Object> upsertUserLocation(CustomerLocation customerLocation){
-        customerLocation.setServiceTime(new Date());
+        customerLocation.setServiceTime(LocalDateTime.now());
         return mobileCustomerService.saveCustomerLocation(customerLocation);
     }
     @GetMapping("/findbyid")

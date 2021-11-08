@@ -21,7 +21,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
+
+import javax.sound.midi.Soundbank;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -242,6 +245,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             AggregationResults<AggrMobileResults> aggregateResult = mongoTemplate.aggregate(aggregation,"mobileCustomer", AggrMobileResults.class);
             System.out.println(aggregateResult.getMappedResults());
             AggrMobileResults target = aggregateResult.getMappedResults().get(0);
+            System.out.println(target);
 //            计算两个点之间的距离
             GlobalCoordinates targetCoord = new GlobalCoordinates(target.getGeoPoint().getX(), target.getGeoPoint().getY());
             GlobalCoordinates sourceCoord = new GlobalCoordinates(mobileLocation.get(list).getX(), mobileLocation.get(list).getY());
@@ -256,6 +260,8 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
                 UpdateResult result = updateOneUsersLogicStatus(list);
                 System.out.println(result);
 //                根据用户id设置唯一的一个坐标状态为1,再加入时间，保证唯一性
+
+                System.out.println(target.getServiceTime());
                 setOneUserLogicStatus(list,target.getServiceTime(),target.getGeoPoint());
             }
         }
@@ -270,20 +276,27 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //        将所有大于0小于1的数据全部设置为2
         Query query = new Query(Criteria.where("customerLocation.userId").is(userId).and("customerLocation.logicStatus").gte(0).lte(1));
         AggregationUpdate aggregationUpdate = newUpdate();
-        aggregationUpdate.set("customerLocation.logicStatus").toValue(0);
+        aggregationUpdate.set("customerLocation.logicStatus").toValue(2);
         //        System.out.println(all);
         return mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationUpdate).all();
     }
 
     @Override
-    public void setOneUserLogicStatus(String userId,Date moveTimeStamp,GeoJsonPoint jsonPoint) {
+    public void setOneUserLogicStatus(String userId,LocalDateTime moveTimeStamp,GeoJsonPoint jsonPoint) {
         // 根据id和用户坐标同时设置
-        Query query = new Query(Criteria.where("mobileId").is(userId).and("customerLocation.geoPoint").is(jsonPoint));
-        AggregationUpdate aggregationOne = newUpdate();
-        // 匹配项logic status 设置为1
-        aggregationOne.set("customerLocation.logicStatus").toValue(1);
-        UpdateResult result = mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationOne).all();
-        System.out.println(result);
+        System.out.println(moveTimeStamp);
+        Query query = new Query(Criteria.where("mobileId").is(userId).and("customerLocation.geoPoint").is(jsonPoint).and("customerLocation.serviceTime").is(moveTimeStamp));
+        // AggregationUpdate aggregationOne = newUpdate();
+        // // 匹配项logic status 设置为1
+        // aggregationOne.set("customerLocation.logicStatus").toValue(1);
+        // UpdateResult result = mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationOne).all();
+
+        Update update = new Update();
+        update.set("customerLocation.$.logicStatus", 1);
+        UpdateResult rls = mongoTemplate.updateFirst(query, update, MobileCustomer.class);
+        System.out.println(rls);
+        System.out.println("update ONE: ");
+        // System.out.println(result);
     }
 
 }

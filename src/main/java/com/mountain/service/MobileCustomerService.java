@@ -5,6 +5,7 @@ import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,5 +28,5 @@ public interface MobileCustomerService {
     List<MobileCustomer>  findUserStatus(Boolean status);
     Map<Object,GeoJsonPoint> queryAndUpdateLocation();
     UpdateResult updateOneUsersLogicStatus(String userId);
-    void setOneUserLogicStatus(String userId, Date moveTimeStamp, GeoJsonPoint jsonPoint);
+    void setOneUserLogicStatus(String userId, LocalDateTime moveTimeStamp, GeoJsonPoint jsonPoint);
 }

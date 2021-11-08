@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,6 @@ public class MobileCustomer {
 //    当前用户的服务状态
     private Boolean serviceStatus;
 //    用户加入时间
-    private Date createTime;
+    private LocalDateTime createTime;
     private List<CustomerLocation> customerLocation;
 }

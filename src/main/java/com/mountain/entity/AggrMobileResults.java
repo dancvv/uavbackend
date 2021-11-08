@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
@@ -20,5 +21,5 @@ public class AggrMobileResults {
     private String id;
     private String mobileId;
     private GeoJsonPoint geoPoint;
-    private Date serviceTime;    
+    private LocalDateTime serviceTime;    
 }
