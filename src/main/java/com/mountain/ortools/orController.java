@@ -21,6 +21,7 @@ public class orController {
 //    标准化地理数据服务
     @Autowired
     private LocalMapper localMapper;
+    @Autowired
     private MobileCustomerServiceImpl mobileCustomerService;
 
     @Autowired
@@ -127,10 +128,12 @@ public class orController {
     }
 //    动态更新位置
     @GetMapping("/dynamicLocation")
-    public void dynamicRoutes(){
+    public Map<Object, Object> dynamicRoutes(){
         Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation();
+        System.out.println(objectObjectMap.get("locations"));
         Map<String, GeoJsonPoint> location = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
         positionService.dynamicLocationSave(location);
+        return objectObjectMap;
 
     }
 }
