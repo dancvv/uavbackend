@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LocaMapper extends BaseMapper<Location> {
+public interface LocalMapper extends BaseMapper<Location> {
     @Update("TRUNCATE table location")
     void deleteLocation();
 }

@@ -1,10 +1,12 @@
 package com.mountain.ortools;
 
 import com.mountain.DAO.orToolsDAO;
-import com.mountain.Mapper.LocaMapper;
+import com.mountain.Mapper.LocalMapper;
 import com.mountain.entity.Location;
+import com.mountain.service.impl.MobileCustomerServiceImpl;
 import com.mountain.service.impl.PositionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -18,11 +20,12 @@ public class orController {
     private PositionServiceImpl positionService;
 //    标准化地理数据服务
     @Autowired
-    private LocaMapper locaMapper;
+    private LocalMapper localMapper;
+    private MobileCustomerServiceImpl mobileCustomerService;
 
     @Autowired
     private orToolsDAO ordao;
-    @PostMapping("/depotData")
+    @PostMapping("/uploadData")
     public Map<String,Object>  postRoute(@RequestBody Collection<Location> list){
 //        boolean save = locationService.save(list);
 //        保存单条数据
@@ -57,7 +60,7 @@ public class orController {
     public Map<String,Object> delete(){
         Map<String,Object> infoMap=new HashMap<>();
 //        删除主表
-        locaMapper.deleteLocation();
+        localMapper.deleteLocation();
         infoMap.put("msg","删除后台数据成功");
         infoMap.put("status",200);
         return infoMap;
@@ -80,7 +83,9 @@ public class orController {
             infoMap.put("msg","规划求解成功");
             infoMap.put("status",200);
 //            调用距离计算模块
+//            返回当前当前需要进行计算的用户
             final Double[][] locationMatrix = ordao.locationMatrix(locationList);
+//            计算所有用户的距离矩阵
             final Long[][] distanceMatrix = ordao.computeDistance(locationMatrix);
 //        根据计算出来的矩阵开始调用后端计算
 //        路线长度，车辆数量，车站数量
@@ -119,5 +124,13 @@ public class orController {
 //        路线长度，车辆数量，车站数量
         Map<Object, ArrayList<Integer>> routeList =positionService.movePassengerPlan(distanceMatrix,vehicleNum,starts,stop);
         return routeList;
+    }
+//    动态更新位置
+    @GetMapping("/dynamicLocation")
+    public void dynamicRoutes(){
+        Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation();
+        Map<String, GeoJsonPoint> location = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
+        positionService.dynamicLocationSave(location);
+
     }
 }

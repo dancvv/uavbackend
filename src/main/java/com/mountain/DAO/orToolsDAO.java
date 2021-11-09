@@ -33,6 +33,7 @@ public class orToolsDAO {
 //                    由于ortools的限制，需要采取缩放保证数值精确度，
 //                    将所有距离值乘以10，然后取整，使得精度提升至分米级
                     double dis= (EARTH_RADIUS*acos*10);
+//                    对double类型进行精度舍弃
                     distanceMatrix[rowIndex][colIndex]=Math.round(dis);
 //                    System.out.println("距离为 "+dis+" 分米");
                 }

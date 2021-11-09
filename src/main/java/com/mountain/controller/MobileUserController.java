@@ -43,7 +43,6 @@ public class MobileUserController {
 //    保存多个用户
     @PostMapping("/savemany")
     public Map<String,Object> saveManyMobileUsers(@RequestBody List<MobileCustomer> mobileCustomers){
-        System.out.println(mobileCustomers);
         return mobileCustomerService.insertManyMobileUsers(mobileCustomers);
     }
 //    保存多个用户的位置
@@ -63,7 +62,7 @@ public class MobileUserController {
     }
 //    查询出用户的logic信息，并更新
     @GetMapping("/updateLocation")
-    public Map<Object, GeoJsonPoint> queryAndUpdateLocation(){
+    public Map<Object, Object> queryAndUpdateLocation(){
         return mobileCustomerService.queryAndUpdateLocation();
     }
 //    根据文档id查询,并将所有用户的logic状态更新为废弃状态2

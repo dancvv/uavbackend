@@ -4,17 +4,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.ortools.Loader;
 import com.google.ortools.constraintsolver.*;
 import com.mountain.DAO.orToolsDAO;
-import com.mountain.Mapper.LocaMapper;
+import com.mountain.Mapper.LocalMapper;
 import com.mountain.entity.Location;
 import com.mountain.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 @Service
-public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> implements LocationService {
+public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> implements LocationService {
 
     @Autowired
     private orToolsDAO ordao;
@@ -60,6 +60,7 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         return solution;
     }
 //    VRP路线规划
+    @Override
     public Map<Object, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
 //        System.load("/home/ubuntu/.m2/repository/com/google/ortools/ortools-linux-x86-64/9.0.9048/linux-x86-64/libjniortools.so");
         Loader.loadNativeLibraries();
@@ -109,6 +110,7 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         return ordao.printSolution(vehicleNumber, routing, manager, solution);
     }
 //    MDVRP路线规划,多场站路线规划
+    @Override
     public Map<Object, ArrayList<Integer>> movePassengerPlan(Long[][] tempDistanceMatrix, Integer vehicleNumber , int[] startPosition, int[] depot){
         Loader.loadNativeLibraries();
         RoutingIndexManager mdVRPmanager=new RoutingIndexManager(tempDistanceMatrix.length,
@@ -136,4 +138,26 @@ public class PositionServiceImpl extends ServiceImpl<LocaMapper, Location> imple
         Assignment solution=computeService(mdVRPmanager,tempDistanceMatrix,vehicleNumber,planRouting);
         return ordao.printSolution(vehicleNumber,planRouting,mdVRPmanager,solution);
     }
+
+    @Override
+    public void dynamicLocationSave(Map<String, GeoJsonPoint> locationMap) {
+        List<Map<String,GeoJsonPoint>> mapList = new ArrayList<>();
+        List<Location> locationCollection = new ArrayList<>();
+        locationMap.forEach((k,v) -> {
+            Location locationSet = new Location();
+            locationSet.setMobileid(k);
+            locationSet.setLat(v.getX());
+            locationSet.setLng(v.getY());
+            locationCollection.add(locationSet);
+        });
+        saveBatch(locationCollection);
+
+    }
+
+    @Override
+    public void dynamicLocation() {
+
+    }
+
+
 }

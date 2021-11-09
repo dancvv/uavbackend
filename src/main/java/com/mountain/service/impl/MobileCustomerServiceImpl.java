@@ -183,20 +183,24 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 
 //    查询出用户的当前状态信息并更新
     @Override
-    public Map<Object,GeoJsonPoint> queryAndUpdateLocation() {
+    public Map<Object,Object> queryAndUpdateLocation() {
+        Map<Object,Object> msgMap = new HashMap<>();
+        Boolean dynamicSta = false;
 //        查询出还未进行服务的用户
         Query query = new Query(Criteria.where("serviceStatus").is(Boolean.FALSE));
         List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
-        List<Map<Object,Boolean>> mobileList = new LinkedList<>();
+        // List<Map<Object,Boolean>> mobileList = new LinkedList<>();
         Map<Object,GeoJsonPoint> mobileLocation = new HashMap<>();
         ArrayList<String> userList = new ArrayList<>();
 //        存储位置
         for (MobileCustomer mobileCustomer:mobileCustomers){
-            Map<Object,Boolean> statusMap = new HashMap<>();
-            statusMap.put(mobileCustomer.getMobileId(),mobileCustomer.getServiceStatus());
+            // Map<Object,Boolean> statusMap = new HashMap<>();
+            // statusMap.put(mobileCustomer.getMobileId(),mobileCustomer.getServiceStatus());
             userList.add(mobileCustomer.getMobileId());
-            mobileList.add(statusMap);
+            // mobileList.add(statusMap);
         }
+        System.out.println(userList);
+        // 查询并更新基准点
         for (String list:userList) {
             System.out.println("user "+list);
 //            查询有基准点的用户
@@ -216,8 +220,15 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
                 queryTime.fields().elemMatch("customerLocation",Criteria.where("logicStatus").is(0));
                 queryTime.fields().include("mobileId");
                 MobileCustomer one1 = mongoTemplate.findOne(queryTime, MobileCustomer.class);
+                System.out.println(one1);
+                // if (one1.getCustomerLocation() != null){
                 GeoJsonPoint geoPoint = one1.getCustomerLocation().get(0).getGeoPoint();
                 mobileLocation.put(one1.getMobileId(),geoPoint);
+                System.out.println(mobileLocation);
+                // } else{
+                //     System.out.println("geoPoint saty the same");
+                //     mobileLocation.put(one1.getMobileId(), value)
+                // }
             }
 
         }
@@ -237,7 +248,6 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
                     );
 //            得到最新坐标
             AggregationResults<AggrMobileResults> aggregateResult = mongoTemplate.aggregate(aggregation,"mobileCustomer", AggrMobileResults.class);
-            System.out.println(aggregateResult.getMappedResults());
             AggrMobileResults target = aggregateResult.getMappedResults().get(0);
             System.out.println(target);
 //            计算两个点之间的距离
@@ -254,16 +264,27 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
                 updateOneUsersLogicStatus(list);
 //                根据用户id设置唯一的一个坐标状态为1,再加入时间，保证唯一性
                 setOneUserLogicStatus(list,target.getServiceTime(),target.getGeoPoint());
+//                存在动态规划的点
+                dynamicSta = true;
             }
         }
         // System.out.println(mobileLocation);
 //        将更新的坐标集合发送出去
-        return mobileLocation;
+        if (dynamicSta){
+            msgMap.put("status",200);
+            msgMap.put("planning","planning changed");
+            msgMap.put("locations",mobileLocation);
+        }else {
+            msgMap.put("status",201);
+            msgMap.put("planning","nothing changed");
+            msgMap.put("locations",mobileLocation);
+        }
+        return msgMap;
 //        return mobileList;
     }
 //    将所有用户的logic状态更新为废弃状态2
     @Override
-    public void updateOneUsersLogicStatus(String userId) {
+    public UpdateResult updateOneUsersLogicStatus(String userId) {
 //        将所有大于0小于1的数据全部设置为2
         Query query = new Query(Criteria.where("customerLocation.userId").is(userId).and("customerLocation.logicStatus").gte(0).lte(1));
         AggregationUpdate aggregationUpdate = newUpdate();
@@ -272,6 +293,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         UpdateResult result = mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationUpdate).all();
         System.out.println("all set to 2");
         System.out.println(result);
+        return result;
     }
 
     @Override
