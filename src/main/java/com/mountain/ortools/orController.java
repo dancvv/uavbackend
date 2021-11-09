@@ -127,13 +127,13 @@ public class orController {
         return routeList;
     }
 //    动态更新位置
-    @GetMapping("/dynamicLocation")
-    public Map<Object, Object> dynamicRoutes(){
+    @PostMapping("/dynamicLocation")
+    public Map<Object, Object> dynamicRoutes(@RequestBody Map<String,Object> uavLocation){
         Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation();
-        System.out.println(objectObjectMap.get("locations"));
-        Map<String, GeoJsonPoint> location = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
-        positionService.dynamicLocationSave(location);
+        Map<String, GeoJsonPoint> mobileLocation = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
+        // 保存动态位置到数据库
+        Boolean status = positionService.dynamicLocationSave(mobileLocation,uavLocation);
+        
         return objectObjectMap;
-
     }
 }

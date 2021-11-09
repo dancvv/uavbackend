@@ -140,22 +140,31 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
     }
 
     @Override
-    public void dynamicLocationSave(Map<String, GeoJsonPoint> locationMap) {
-        List<Map<String,GeoJsonPoint>> mapList = new ArrayList<>();
+    public Boolean dynamicLocationSave(Map<String, GeoJsonPoint> locationMap,Map<String,GeoJsonPoint> uavLocation) {
         List<Location> locationCollection = new ArrayList<>();
+        // 保存用户位置
         locationMap.forEach((k,v) -> {
-            Location locationSet = new Location();
-            locationSet.setMobileid(k);
-            locationSet.setLat(v.getX());
-            locationSet.setLng(v.getY());
-            locationCollection.add(locationSet);
+            Location mobilePositionSet = new Location();
+            mobilePositionSet.setMobileid(k);
+            mobilePositionSet.setLat(v.getX());
+            mobilePositionSet.setLng(v.getY());
+            locationCollection.add(mobilePositionSet);
         });
-        saveBatch(locationCollection);
-
+        // 保存无人机位置
+        uavLocation.forEach((K,V) -> {
+            Location uavPositionSet = new Location();
+            uavPositionSet.setMobileid(K);
+            uavPositionSet.setLat(V.getX());
+            uavPositionSet.setLng(V.getY());
+            locationCollection.add(uavPositionSet);
+        });
+        // 批量保存用户
+        Boolean saveBoolean = saveBatch(locationCollection);
+        return saveBoolean;
     }
 
     @Override
-    public void dynamicLocation() {
+    public void dynamicRoutes() {
 
     }
 
