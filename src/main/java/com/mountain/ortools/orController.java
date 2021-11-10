@@ -112,7 +112,7 @@ public class orController {
         }
         return infoMap;
     }
-//    上传移动用户的当前位置
+//    动态规划路线算法
     @GetMapping("passengermoving")
     public Map<Object, ArrayList<Integer>> uploadMovingPassenger(int[] starts,int vehicleNum){
 
@@ -128,12 +128,17 @@ public class orController {
     }
 //    动态更新位置
     @PostMapping("/dynamicLocation")
-    public Map<Object, Object> dynamicRoutes(@RequestBody Map<String,Object> uavLocation){
+    public Map<Object, ArrayList<Integer>> dynamicRoutes(@RequestBody Map<String,Location> uavLocation,@RequestBody Map<String,Location> depotLocation){
         Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation();
         Map<String, GeoJsonPoint> mobileLocation = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
         // 保存动态位置到数据库
-        Boolean status = positionService.dynamicLocationSave(mobileLocation,uavLocation);
-        
-        return objectObjectMap;
+        Boolean status = positionService.dynamicLocationSave(mobileLocation,uavLocation,depotLocation);
+        if (status){
+            Map<Object, ArrayList<Integer>> objectArrayListMap = positionService.dynamicRoutes(uavLocation);
+            return objectArrayListMap;
+        }else {
+            System.out.println("something wrong happened");
+            return null;
+        }
     }
 }

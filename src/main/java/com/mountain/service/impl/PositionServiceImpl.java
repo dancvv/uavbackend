@@ -139,8 +139,9 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         return ordao.printSolution(vehicleNumber,planRouting,mdVRPmanager,solution);
     }
 
+//    保存动态用户的位置
     @Override
-    public Boolean dynamicLocationSave(Map<String, GeoJsonPoint> locationMap,Map<String,GeoJsonPoint> uavLocation) {
+    public Boolean dynamicLocationSave(Map<String, GeoJsonPoint> locationMap,Map<String,Location> uavLocation,Map<String,Location> depotLocation) {
         List<Location> locationCollection = new ArrayList<>();
         // 保存用户位置
         locationMap.forEach((k,v) -> {
@@ -153,19 +154,46 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         // 保存无人机位置
         uavLocation.forEach((K,V) -> {
             Location uavPositionSet = new Location();
-            uavPositionSet.setMobileid(K);
-            uavPositionSet.setLat(V.getX());
-            uavPositionSet.setLng(V.getY());
+            uavPositionSet.setMobileid(V.getMobileid());
+            uavPositionSet.setLat(V.getLat());
+            uavPositionSet.setLng(V.getLng());
             locationCollection.add(uavPositionSet);
         });
+//        保存仓库位置
+        depotLocation.forEach((K,V) ->{
+            Location depotPositionSet = new Location();
+            depotPositionSet.setMobileid(V.getMobileid());
+            depotPositionSet.setLat(V.getLat());
+            depotPositionSet.setLng(V.getLng());
+            locationCollection.add(depotPositionSet);
+        });
         // 批量保存用户
-        Boolean saveBoolean = saveBatch(locationCollection);
-        return saveBoolean;
+        return saveBatch(locationCollection);
     }
 
     @Override
-    public void dynamicRoutes() {
-
+    public Map<Object, ArrayList<Integer>> dynamicRoutes(Map<String,Location> uavLocation) {
+//        查询有多少条数据
+        int count = (int) count();
+//        无人机数量
+        int uavSize = uavLocation.size();
+        int[] startPosition = new int[uavSize];
+        int[] stopPosition = new int[uavSize];
+//            起始站点
+        for (int i = 0; i<uavSize; i++){
+            startPosition[i] = count - uavSize -1 +i;
+        }
+//        仓储位置
+        for (int i = 0; i<uavSize; i++){
+            stopPosition[i] = count - 1;
+        }
+//        规划算法
+        List<Location> allLocationList = list();
+        Double[][] locationMatrix = ordao.locationMatrix(allLocationList);
+        Long[][] distanceMatrix = ordao.computeDistance(locationMatrix);
+//        得到规划路线
+        Map<Object, ArrayList<Integer>> objectArrayListMap = movePassengerPlan(distanceMatrix, uavSize, startPosition, stopPosition);
+        return objectArrayListMap;
     }
 
 
