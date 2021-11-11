@@ -141,4 +141,11 @@ public class orController {
             return null;
         }
     }
+    @GetMapping("/saveLocation")
+    public String saveDynamicLocation(){
+        Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation();
+        Map<String, GeoJsonPoint> locations = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
+        positionService.saveOneListUsers(locations);
+        return "success";
+    }
 }

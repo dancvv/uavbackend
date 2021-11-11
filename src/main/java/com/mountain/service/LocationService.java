@@ -16,6 +16,8 @@ public interface LocationService extends IService<Location> {
     // 动态保存用户位置
     Boolean dynamicLocationSave(Map<String, GeoJsonPoint> locationMap,Map<String,Location> uavLocation,Map<String,Location> depotLocation);
     Map<Object, ArrayList<Integer>> dynamicRoutes(Map<String,Location> uavLocation);
+//    保存动态位置，单一测试
+    void saveOneListUsers(Map<String, GeoJsonPoint> locationMap);
 
 
 }

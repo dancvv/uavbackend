@@ -196,5 +196,19 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         return objectArrayListMap;
     }
 
+    @Override
+    public void saveOneListUsers(Map<String, GeoJsonPoint> locationMap) {
+        List<Location> locationCollection = new ArrayList<>();
+        // 保存用户位置
+        locationMap.forEach((k,v) -> {
+            Location mobilePositionSet = new Location();
+            mobilePositionSet.setMobileid(k);
+            mobilePositionSet.setLat(v.getX());
+            mobilePositionSet.setLng(v.getY());
+            locationCollection.add(mobilePositionSet);
+        });
+        saveBatch(locationCollection);
+    }
+
 
 }
