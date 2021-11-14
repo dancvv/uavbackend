@@ -103,14 +103,17 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     }
 
     @Override
-    public Map<String,Object> insertManyMobileUsers(List<MobileCustomer> customerList) {
+    public Map<String,Object> saveManyMobileUsers(List<MobileCustomer> customerList) {
         Map<String,Object> megMap = new HashMap<>();
+
         try {
             Collection<MobileCustomer> insert = mongoTemplate.insert(customerList, MobileCustomer.class);
             megMap.put("meg","successfully add");
+            megMap.put("status",200);
         }catch (Exception e){
             System.out.println(e);
             megMap.put("meg","failure");
+            megMap.put("status",400);
         }
         return megMap;
 
@@ -120,20 +123,28 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     public Map<String, Object> updateManyUsersLocation(List<CustomerLocation> customerLocationList) {
         Map<String,Object> megMap = new HashMap<>();
 //        CustomerLocation tempLocation = new CustomerLocation();
-        for (CustomerLocation customerLocation : customerLocationList) {
-            Query query = new Query(Criteria.where("mobileId").is(customerLocation.getUserId()));
+        try {
+            for (CustomerLocation customerLocation : customerLocationList) {
+                Query query = new Query(Criteria.where("mobileId").is(customerLocation.getUserId()));
 //            管他是不是0，全设置为0
-            customerLocation.setLogicStatus(customerLocation.getLogicStatus() != 0 ? 0 : 0);
-            MobileCustomer verifyOne = mongoTemplate.findOne(query, MobileCustomer.class);
-            if (verifyOne == null) {
-                megMap.put("meg", "the user does not exist, checkin");
-            } else {
-                Query queryUsers = new Query(Criteria.where("mobileId").is(customerLocation.getUserId()));
-                Update update = new Update();
-                update.push("customLocation",customerLocation);
-                mongoTemplate.upsert(queryUsers, update, MobileCustomer.class);
-                megMap.put("meg","successfully insert");
+                customerLocation.setLogicStatus(customerLocation.getLogicStatus() != 0 ? 0 : 0);
+                MobileCustomer verifyOne = mongoTemplate.findOne(query, MobileCustomer.class);
+                if (verifyOne == null) {
+//                将添加失败的数组返回至前端
+                    megMap.put(customerLocation.getUserId(), "the user does not exist, checkin");
+                } else {
+                    Query queryUsers = new Query(Criteria.where("mobileId").is(customerLocation.getUserId()));
+                    Update update = new Update();
+                    update.push("customLocation",customerLocation);
+                    mongoTemplate.upsert(queryUsers, update, MobileCustomer.class);
+                    megMap.put("meg","successfully insert");
+                }
             }
+            megMap.put("status",200);
+        }catch (Exception e){
+            System.out.println(e);
+            megMap.put("status",400);
+            megMap.put("msg",e.getMessage());
         }
         return megMap;
     }
@@ -207,7 +218,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             Query queryLocation = new Query(Criteria.where("mobileId").is(list));
             queryLocation.fields().elemMatch("customerLocation", Criteria.where("logicStatus").is(1));
             queryLocation.fields().include("mobileId");
-            MobileCustomer one = mongoTemplate.findOne(queryLocation, MobileCustomer.class);
+                MobileCustomer one = mongoTemplate.findOne(queryLocation, MobileCustomer.class);
             if (one.getCustomerLocation() != null) {
                 System.out.println("_________not null___________");
                 List<CustomerLocation> customerLocation1 = one.getCustomerLocation();

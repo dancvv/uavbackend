@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 //解决跨域
@@ -147,5 +148,9 @@ public class orController {
         Map<String, GeoJsonPoint> locations = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
         positionService.saveOneListUsers(locations);
         return "success";
+    }
+    @PostMapping("/datetest")
+    public void dateTest(@RequestBody LocalDateTime ll){
+        System.out.println(ll);
     }
 }

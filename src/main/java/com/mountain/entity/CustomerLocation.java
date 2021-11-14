@@ -1,9 +1,11 @@
 package com.mountain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +22,8 @@ public class CustomerLocation {
 //    当前服务状态：1：服务，0：未服务
     private Boolean status;
 //    服务时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime serviceTime;
 //    服务逻辑判断，0：可搜索，1：搜索基准，2：废弃点，不参与搜索
     private int logicStatus;

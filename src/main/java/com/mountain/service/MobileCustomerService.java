@@ -21,7 +21,7 @@ public interface MobileCustomerService {
     String deleteAllUsers();
     String removeLocationByUserId(String id);
     MobileCustomer findByUersId(String id);
-    Map<String,Object> insertManyMobileUsers(List<MobileCustomer> customerList);
+    Map<String,Object> saveManyMobileUsers(List<MobileCustomer> customerList);
     Map<String,Object> updateManyUsersLocation(List<CustomerLocation> customerLocationList);
     List<MobileCustomer> LocationCompare();
     List<MobileCustomer>  findUserStatus(Boolean status);

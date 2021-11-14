@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import java.util.Map;
  * @author: mountainINblack
  * @date: 2021/10/30 19:09
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/mobile")
 public class MobileUserController {
@@ -43,7 +45,9 @@ public class MobileUserController {
 //    保存多个用户
     @PostMapping("/savemany")
     public Map<String,Object> saveManyMobileUsers(@RequestBody List<MobileCustomer> mobileCustomers){
-        return mobileCustomerService.insertManyMobileUsers(mobileCustomers);
+        System.out.println(mobileCustomers);
+        System.out.println("___________");
+        return mobileCustomerService.saveManyMobileUsers(mobileCustomers);
     }
 //    保存多个用户的位置
     @PostMapping("/manylocations")
