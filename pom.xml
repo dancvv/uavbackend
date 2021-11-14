@@ -81,6 +81,10 @@
 <!--            <version>2.10.13</version>-->
 <!--        </dependency>-->
 <!--        解决时间序列化-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
 
 
 

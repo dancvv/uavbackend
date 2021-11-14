@@ -5,11 +5,9 @@ import com.mountain.entity.CustomerLocation;
 import com.mountain.entity.MobileCustomer;
 import com.mountain.service.impl.MobileCustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +50,7 @@ public class MobileUserController {
 //    保存多个用户的位置
     @PostMapping("/manylocations")
     public Map<String, Object> saveManyUsersLocations(@RequestBody List<CustomerLocation> customerLocationList){
+        System.out.println(customerLocationList);
         return mobileCustomerService.updateManyUsersLocation(customerLocationList);
     }
 //    查询位置是否出界
@@ -74,4 +73,9 @@ public class MobileUserController {
     public UpdateResult updateLogicStaById(@RequestParam String userId){
         return mobileCustomerService.updateOneUsersLogicStatus(userId);
     }
+    @DeleteMapping("/deleteall")
+    public String deleteAllUsers(){
+        return mobileCustomerService.deleteAllUsers();
+    }
 }
+
