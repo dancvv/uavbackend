@@ -18,6 +18,9 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
 
     @Autowired
     private orToolsDAO ordao;
+
+    @Autowired
+    private LocalMapper localMapper;
 //    抽离共同代码
 
     public Assignment computeService(RoutingIndexManager manager,Long[][] distanceMatrix, Integer vehicleNumber,RoutingModel routing){
@@ -170,7 +173,7 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         // 批量保存用户
         return saveBatch(locationCollection);
     }
-
+//    调用规划算法
     @Override
     public Map<Object, ArrayList<Integer>> dynamicRoutes(Map<String,Location> uavLocation) {
 //        查询有多少条数据
@@ -195,9 +198,11 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         Map<Object, ArrayList<Integer>> objectArrayListMap = movePassengerPlan(distanceMatrix, uavSize, startPosition, stopPosition);
         return objectArrayListMap;
     }
-
+//    保存所有的用户位置
     @Override
     public void saveOneListUsers(Map<String, GeoJsonPoint> locationMap) {
+//        刪除所有位置信息
+        localMapper.deleteAllLocations();
         List<Location> locationCollection = new ArrayList<>();
         // 保存用户位置
         locationMap.forEach((k,v) -> {

@@ -136,7 +136,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
                 } else {
                     Query queryUsers = new Query(Criteria.where("mobileId").is(customerLocation.getUserid()));
                     Update update = new Update();
-                    update.push("customLocation",customerLocation);
+                    update.push("customerLocation",customerLocation);
                     mongoTemplate.upsert(queryUsers, update, MobileCustomer.class);
                     megMap.put("meg","successfully insert");
                 }
@@ -211,7 +211,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             userList.add(mobileCustomer.getMobileId());
             // mobileList.add(statusMap);
         }
-        System.out.println(userList);
+//        System.out.println(userList);
         // 查询并更新基准点
         for (String list:userList) {
             System.out.println("user "+list);
@@ -232,11 +232,11 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
                 queryTime.fields().elemMatch("customerLocation",Criteria.where("logicStatus").is(0));
                 queryTime.fields().include("mobileId");
                 MobileCustomer one1 = mongoTemplate.findOne(queryTime, MobileCustomer.class);
-                System.out.println(one1);
+//                System.out.println(one1);
                 // if (one1.getCustomerLocation() != null){
                 GeoJsonPoint geoPoint = one1.getCustomerLocation().get(0).getGeoPoint();
                 mobileLocation.put(one1.getMobileId(),geoPoint);
-                System.out.println(mobileLocation);
+//                System.out.println(mobileLocation);
                 // } else{
                 //     System.out.println("geoPoint saty the same");
                 //     mobileLocation.put(one1.getMobileId(), value)
@@ -266,7 +266,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             GlobalCoordinates targetCoord = new GlobalCoordinates(target.getGeoPoint().getX(), target.getGeoPoint().getY());
             GlobalCoordinates sourceCoord = new GlobalCoordinates(mobileLocation.get(list).getX(), mobileLocation.get(list).getY());
             double distance = commonUtilsService.calculateGeoPointsDistance(sourceCoord, targetCoord, Ellipsoid.WGS84);
-            System.out.println("juli "+distance);
+            System.out.println("历史点之间的距离 "+distance);
 //            此处计算两个点的距离，并进行判断，两个点不能超过50m
 //            如果超过50m，革新点,得到新的坐标点，返回前端，返回mysql，重新计算
             if (distance >= 50){
@@ -307,7 +307,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         System.out.println(result);
         return result;
     }
-
+//    确保至少一个用户的逻辑状态为1
     @Override
     public void setOneUserLogicStatus(String userId,LocalDateTime moveTimeStamp,GeoJsonPoint jsonPoint) {
         // 根据id和用户坐标同时设置
@@ -316,7 +316,6 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         // AggregationUpdate aggregationOne = newUpdate();
         // aggregationOne.set("customerLocation.logicStatus").toValue(1);
         // UpdateResult result = mongoTemplate.update(MobileCustomer.class).matching(query).apply(aggregationOne).all();
-
         // 匹配项logic status 设置为1
         Update update = new Update();
         update.set("customerLocation.$.logicStatus", 1);

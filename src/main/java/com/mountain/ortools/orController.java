@@ -7,7 +7,6 @@ import com.mountain.service.impl.MobileCustomerServiceImpl;
 import com.mountain.service.impl.PositionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -59,11 +58,11 @@ public class orController {
         return infoMap;
     }
 //    删除所有表数据
-    @GetMapping("/delete")
-    public Map<String,Object> delete(){
+    @GetMapping("/deleteALL")
+    public Map<String,Object> deleteAll(){
         Map<String,Object> infoMap=new HashMap<>();
 //        删除主表
-        localMapper.deleteLocation();
+        localMapper.deleteAllLocations();
         infoMap.put("msg","删除后台数据成功");
         infoMap.put("status",200);
         return infoMap;
@@ -143,12 +142,18 @@ public class orController {
             return null;
         }
     }
-    @GetMapping("/saveLocation")
+//    保存所有用户的位置
+    @GetMapping("/saveAllLocation")
     public String saveDynamicLocation(){
         Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation();
         Map<String, GeoJsonPoint> locations = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
         positionService.saveOneListUsers(locations);
         return "success";
+    }
+
+    @GetMapping("/findbynm")
+    public Integer findbyUserName(@RequestParam String name){
+        return localMapper.findIndexByName(name);
     }
     @PostMapping("/datetest")
     public void dateTest(@RequestBody LocalDateTime ll){
