@@ -215,5 +215,12 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         saveBatch(locationCollection);
     }
 
+    
+    @Override
+    public int findIndexByName(String name) {
+        
+        return localMapper.findIndexByName(name);
+    }
+
 
 }

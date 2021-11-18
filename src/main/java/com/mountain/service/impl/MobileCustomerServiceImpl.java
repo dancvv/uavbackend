@@ -68,7 +68,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         Query query = new Query(Criteria.where("mobileId").is(userId));
         MobileCustomer verifyOne = mongoTemplate.findOne(query, MobileCustomer.class);
         if (verifyOne == null){
-            megMap.put("meg", "the user does not exist, checkin");
+            megMap.put("msg", "the user does not exist, checkin");
         }else {
             megMap.put("msg","successfully upsert new location");
             Update update = new Update();
@@ -109,11 +109,11 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         Map<String,Object> megMap = new HashMap<>();
         try {
             Collection<MobileCustomer> insert = mongoTemplate.insert(customerList, MobileCustomer.class);
-            megMap.put("meg","successfully add");
+            megMap.put("msg","successfully add");
             megMap.put("status",200);
         }catch (Exception e){
             System.out.println(e);
-            megMap.put("meg","failure");
+            megMap.put("msg","failure");
             megMap.put("status",400);
         }
         return megMap;
@@ -126,7 +126,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //        CustomerLocation tempLocation = new CustomerLocation();
         try {
             for (CustomerLocation customerLocation : customerLocationList) {
-                Query query = new Query(Criteria.where("mobileId").is(customerLocation.getUserid()));
+                Query query = new Query(Criteria.where("mobileId").is(customerLocation.getUserid()).and("uuid").is(customerLocation.getUuid()));
 //            管他是不是0，全设置为0
                 customerLocation.setLogicStatus(customerLocation.getLogicStatus() != 0 ? 0 : 0);
                 MobileCustomer verifyOne = mongoTemplate.findOne(query, MobileCustomer.class);
@@ -134,11 +134,12 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //                将添加失败的数组返回至前端
                     megMap.put(customerLocation.getUserid(), "the user does not exist, checkin");
                 } else {
-                    Query queryUsers = new Query(Criteria.where("mobileId").is(customerLocation.getUserid()));
+//                    当存在用户和同一uuid则插入数据
+                    Query queryUsers = new Query(Criteria.where("mobileId").is(customerLocation.getUserid()).and("uuid").is(customerLocation.getUuid()));
                     Update update = new Update();
                     update.push("customerLocation",customerLocation);
                     mongoTemplate.upsert(queryUsers, update, MobileCustomer.class);
-                    megMap.put("meg","successfully insert");
+                    megMap.put("msg","successfully insert");
                 }
             }
             megMap.put("status",200);
@@ -195,7 +196,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 
 //    查询出用户的当前状态信息并更新
     @Override
-    public Map<Object,Object> queryAndUpdateLocation() {
+    public Map<Object,Object> queryAndUpdateLocation(String uuid) {
         Map<Object,Object> msgMap = new HashMap<>();
         boolean dynamicSta = false;
 //        查询出还未进行服务的用户

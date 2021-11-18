@@ -1,4 +1,4 @@
-package com.mountain.ortools;
+package com.mountain.controller;
 
 import com.mountain.DAO.orToolsDAO;
 import com.mountain.Mapper.LocalMapper;
@@ -129,8 +129,8 @@ public class orController {
     }
 //    动态更新位置
     @PostMapping("/dynamicLocation")
-    public Map<Object, ArrayList<Integer>> dynamicRoutes(@RequestBody Map<String,Location> uavLocation,@RequestBody Map<String,Location> depotLocation){
-        Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation();
+    public Map<Object, ArrayList<Integer>> dynamicRoutes(@RequestBody Map<String,Location> uavLocation,@RequestBody Map<String,Location> depotLocation,@RequestParam String uuid){
+        Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation(uuid);
         Map<String, GeoJsonPoint> mobileLocation = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
         // 保存动态位置到数据库
         Boolean status = positionService.dynamicLocationSave(mobileLocation,uavLocation,depotLocation);
@@ -143,9 +143,10 @@ public class orController {
         }
     }
 //    保存所有用户的位置
-    @GetMapping("/saveAllLocation")
-    public String saveDynamicLocation(){
-        Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation();
+    @PostMapping("/saveAllLocation")
+    public String saveDynamicLocation(@RequestParam String uuid){
+//        确定唯一的uuid
+        Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation(uuid);
         Map<String, GeoJsonPoint> locations = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
         positionService.saveOneListUsers(locations);
         return "success";
@@ -153,7 +154,7 @@ public class orController {
 
     @GetMapping("/findbynm")
     public Integer findbyUserName(@RequestParam String name){
-        return localMapper.findIndexByName(name);
+        return positionService.findIndexByName(name);
     }
     @PostMapping("/datetest")
     public void dateTest(@RequestBody LocalDateTime ll){

@@ -63,10 +63,10 @@ public class MobileUserController {
     public List<MobileCustomer> getStatus(Boolean status){
         return mobileCustomerService.findUserStatus(status);
     }
-//    查询出用户的logic信息，并更新
-    @GetMapping("/updateLocation")
-    public Map<Object, Object> queryAndUpdateLocation(){
-        return mobileCustomerService.queryAndUpdateLocation();
+//    根据唯一的uuid，查询出所有用户的logic信息，并更新
+    @PostMapping("/updateLocation")
+    public Map<Object, Object> queryAndUpdateLocation(@RequestParam String uuid){
+        return mobileCustomerService.queryAndUpdateLocation(uuid);
     }
 //    根据文档id查询,并将所有用户的logic状态更新为废弃状态2
     @GetMapping("/setlogicsta")

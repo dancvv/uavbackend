@@ -26,6 +26,8 @@ public class MobileCustomer {
     private String mobileId;
 //    当前用户的服务状态
     private Boolean serviceStatus;
+//    用户批次控制
+    private String uuid;
 //    用户加入时间
 //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

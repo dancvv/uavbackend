@@ -25,7 +25,7 @@ public interface MobileCustomerService {
     Map<String,Object> updateManyUsersLocation(List<CustomerLocation> customerLocationList);
     List<MobileCustomer> LocationCompare();
     List<MobileCustomer>  findUserStatus(Boolean status);
-    Map<Object,Object> queryAndUpdateLocation();
+    Map<Object,Object> queryAndUpdateLocation(String uuid);
     UpdateResult updateOneUsersLogicStatus(String userId);
     void setOneUserLogicStatus(String userId, LocalDateTime moveTimeStamp, GeoJsonPoint jsonPoint);
 }

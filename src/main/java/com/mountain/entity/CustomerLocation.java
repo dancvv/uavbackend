@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CustomerLocation {
     private String userid;
+//    进行用户管理
+    private String uuid;
 //    当前服务状态：1：服务，0：未服务
     private Boolean status;
 //    服务时间
