@@ -12,6 +12,15 @@ public interface LocalMapper extends BaseMapper<Location> {
     @Update("TRUNCATE table location")
     void deleteAllLocations();
 
+    /**
+     * 查找特定用户的id
+     * @param mobileid
+     * @return
+     */
     @Select("SELECT name_id FROM location WHERE mobileid=#{mobileid}")
-    public int findIndexByName(String mobileid);
+    int findIndexByName(String mobileid);
+
+    // 查找
+    @Select("select name_id from location where mobileid like 'user%'")
+    int[] findUsers();
 }

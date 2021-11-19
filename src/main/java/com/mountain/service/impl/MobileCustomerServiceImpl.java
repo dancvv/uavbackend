@@ -199,8 +199,8 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     public Map<Object,Object> queryAndUpdateLocation(String uuid) {
         Map<Object,Object> msgMap = new HashMap<>();
         boolean dynamicSta = false;
-//        查询出还未进行服务的用户
-        Query query = new Query(Criteria.where("serviceStatus").is(Boolean.FALSE));
+//        查询出还未进行服务的用户,通过uuid确定唯一的用户
+        Query query = new Query(Criteria.where("serviceStatus").is(Boolean.FALSE).and("uuid").is(uuid));
         List<MobileCustomer> mobileCustomers = mongoTemplate.find(query, MobileCustomer.class);
         // List<Map<Object,Boolean>> mobileList = new LinkedList<>();
         Map<Object,GeoJsonPoint> mobileLocation = new HashMap<>();
@@ -216,8 +216,8 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         // 查询并更新基准点
         for (String list:userList) {
             System.out.println("user "+list);
-//            查询有基准点的用户
-            Query queryLocation = new Query(Criteria.where("mobileId").is(list));
+//            查询有基准点的用户，即logic为1,确保每次查找的都是一个uuid
+            Query queryLocation = new Query(Criteria.where("mobileId").is(list).and("uuid").is(uuid));
             queryLocation.fields().elemMatch("customerLocation", Criteria.where("logicStatus").is(1));
             queryLocation.fields().include("mobileId");
                 MobileCustomer one = mongoTemplate.findOne(queryLocation, MobileCustomer.class);
@@ -229,7 +229,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             } else {
                 System.out.println("-------------null-------------");
 //                查询时间最早的点，没有基准点的用户
-                Query queryTime = new Query(Criteria.where("mobileId").is(list));
+                Query queryTime = new Query(Criteria.where("mobileId").is(list).and("uuid").is(uuid));
                 queryTime.fields().elemMatch("customerLocation",Criteria.where("logicStatus").is(0));
                 queryTime.fields().include("mobileId");
                 MobileCustomer one1 = mongoTemplate.findOne(queryTime, MobileCustomer.class);
@@ -253,13 +253,13 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //            每次取到最新的值
             Aggregation aggregation = newAggregation(MobileCustomer.class,
                     unwind("customerLocation"),
-                    match(Criteria.where("mobileId").is(list)),
+                    match(Criteria.where("mobileId").is(list).and("uuid").is(uuid)),
                     sort(DESC,"customerLocation.serviceTime"),
 //                    project("mobileId","serviceStatus","customerLocation.geoPoint","customerLocation.serviceTime"),
                     project("mobileId","customerLocation.geoPoint","customerLocation.serviceTime"),
                     limit(1)
                     );
-//            得到最新坐标
+//            得到最新坐标,将结果输出值新的AggrMobileResults实体类中
             AggregationResults<AggrMobileResults> aggregateResult = mongoTemplate.aggregate(aggregation,"mobileCustomer", AggrMobileResults.class);
             AggrMobileResults target = aggregateResult.getMappedResults().get(0);
             System.out.println(target);
@@ -274,7 +274,7 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
 //                重新设置规划数据
                 mobileLocation.replace(list,target.getGeoPoint());
 //                抛弃所有status为0的坐标，将这些坐标status都设置为2
-                updateOneUsersLogicStatus(list);
+                updateOneUsersLogicStatus(list,uuid);
 //                根据用户id设置唯一的一个坐标状态为1,再加入时间，保证唯一性
                 setOneUserLogicStatus(list,target.getServiceTime(),target.getGeoPoint());
 //                存在动态规划的点
@@ -297,9 +297,9 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     }
 //    将所有用户的logic状态更新为废弃状态2
     @Override
-    public UpdateResult updateOneUsersLogicStatus(String userId) {
+    public UpdateResult updateOneUsersLogicStatus(String userId,String uuid) {
 //        将所有大于0小于1的数据全部设置为2
-        Query query = new Query(Criteria.where("customerLocation.userId").is(userId).and("customerLocation.logicStatus").gte(0).lte(1));
+        Query query = new Query(Criteria.where("customerLocation.userId").is(userId).and("customerLocation.logicStatus").gte(0).lte(1).and("uuid").is(uuid));
         AggregationUpdate aggregationUpdate = newUpdate();
         aggregationUpdate.set("customerLocation.logicStatus").toValue(2);
         //        System.out.println(all);

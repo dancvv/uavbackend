@@ -142,13 +142,19 @@ public class orController {
             return null;
         }
     }
-//    保存所有用户的位置
+
+    /**
+     * 根据uuid值查找唯一的用户进行服务
+     * @param uuid
+     * @return
+     */
     @PostMapping("/saveAllLocation")
     public String saveDynamicLocation(@RequestParam String uuid){
 //        确定唯一的uuid
+
         Map<Object, Object> objectObjectMap = mobileCustomerService.queryAndUpdateLocation(uuid);
         Map<String, GeoJsonPoint> locations = (Map<String, GeoJsonPoint>) objectObjectMap.get("locations");
-        positionService.saveOneListUsers(locations);
+        positionService.saveAllUsers(locations);
         return "success";
     }
 
@@ -156,8 +162,19 @@ public class orController {
     public Integer findbyUserName(@RequestParam String name){
         return positionService.findIndexByName(name);
     }
-    @PostMapping("/datetest")
-    public void dateTest(@RequestBody LocalDateTime ll){
-        System.out.println(ll);
+
+    /**
+     * 查找还没有服务的所有用户
+     * @return
+     */
+    @GetMapping("/findusers")
+    public int[] findUnservedUsers(){
+        return positionService.findUnservedUsers();
+    }
+
+    @PostMapping("findStaticRoutes")
+    public void findStaticRoutes(@RequestParam Integer vehicleNum){
+        Map<String, Object> staticRoutes = positionService.findStaticRoutes(vehicleNum);
+        System.out.println(staticRoutes);
     }
 }

@@ -17,7 +17,7 @@ public interface LocationService extends IService<Location> {
     Boolean dynamicLocationSave(Map<String, GeoJsonPoint> locationMap,Map<String,Location> uavLocation,Map<String,Location> depotLocation);
     Map<Object, ArrayList<Integer>> dynamicRoutes(Map<String,Location> uavLocation);
 //    保存动态位置，单一测试
-    void saveOneListUsers(Map<String, GeoJsonPoint> locationMap);
+    Boolean saveAllUsers(Map<String, GeoJsonPoint> locationMap);
 
     /**
      * 查找index
@@ -26,5 +26,13 @@ public interface LocationService extends IService<Location> {
      */
     int findIndexByName(String name);
 
+    /**
+     * 查找所有未服务的用户
+     * @return
+     */
+    int[] findUnservedUsers();
+
+    Map<String, Object> findStaticRoutes(Integer vehicleNum);
+    void deleteAllLocation();
 
 }

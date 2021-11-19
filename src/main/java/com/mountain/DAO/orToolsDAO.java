@@ -51,8 +51,6 @@ public class orToolsDAO {
         ArrayList<Integer> planList = new ArrayList<>();
         // Solution cost.
         logger.info("Objective : " + solution.objectiveValue());
-        System.out.println("获取当前值");
-        System.out.println((int) solution.objectiveValue());
         planList.add((int) solution.objectiveValue());
         // Inspect solution.
         long maxRouteDistance = 0;

@@ -43,7 +43,7 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         // 无人机最大飞行距离设置为8km
         routing.addDimension(transitCallbackIndex,
                 0,
-                80000,
+                50000,
                 true, // start cumul to zero
                 "Distance");
         RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
@@ -198,9 +198,10 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         Map<Object, ArrayList<Integer>> objectArrayListMap = movePassengerPlan(distanceMatrix, uavSize, startPosition, stopPosition);
         return objectArrayListMap;
     }
+
 //    保存所有的用户位置
     @Override
-    public void saveOneListUsers(Map<String, GeoJsonPoint> locationMap) {
+    public Boolean saveAllUsers(Map<String, GeoJsonPoint> locationMap) {
 //        刪除所有位置信息
         localMapper.deleteAllLocations();
         List<Location> locationCollection = new ArrayList<>();
@@ -212,14 +213,48 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
             mobilePositionSet.setLng(v.getY());
             locationCollection.add(mobilePositionSet);
         });
-        saveBatch(locationCollection);
+        return saveBatch(locationCollection);
     }
 
     
     @Override
     public int findIndexByName(String name) {
-        
         return localMapper.findIndexByName(name);
+    }
+    @Override
+    public int[] findUnservedUsers() {
+        return localMapper.findUsers();
+    }
+
+
+    @Override
+    public Map<String, Object> findStaticRoutes(Integer vehicleNum) {
+        Map<String, Object> infoMap = new HashMap<>();
+        List<Location> userList = list();
+//        index默认从1开始计数
+        int depot = localMapper.findIndexByName("depot 0") - 1;
+        if (userList.size() <= 2) {
+            infoMap.put("msg", "服务器中资源不足，添加数据");
+            infoMap.put("status", 404);
+        } else {
+            infoMap.put("msg", "规划求解成功");
+            infoMap.put("status", 200);
+//            调用距离计算模块
+//            返回当前当前需要进行计算的用户
+            final Double[][] locationMatrix = ordao.locationMatrix(userList);
+//            计算所有用户的距离矩阵
+            final Long[][] distanceMatrix = ordao.computeDistance(locationMatrix);
+//        根据计算出来的矩阵开始调用后端计算
+//        路线长度，车辆数量，车站数量
+            Map<Object, ArrayList<Integer>> routeList = planCompute(distanceMatrix, vehicleNum, depot);
+            infoMap.put("results", routeList);
+        }
+        return infoMap;
+    }
+
+    @Override
+    public void deleteAllLocation() {
+        localMapper.deleteAllLocations();
     }
 
 

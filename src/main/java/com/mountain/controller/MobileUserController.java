@@ -70,8 +70,8 @@ public class MobileUserController {
     }
 //    根据文档id查询,并将所有用户的logic状态更新为废弃状态2
     @GetMapping("/setlogicsta")
-    public UpdateResult updateLogicStaById(@RequestParam String userId){
-        return mobileCustomerService.updateOneUsersLogicStatus(userId);
+    public UpdateResult updateLogicStaById(@RequestParam String userId,@RequestParam String uuid){
+        return mobileCustomerService.updateOneUsersLogicStatus(userId,uuid);
     }
     @DeleteMapping("/deleteall")
     public String deleteAllUsers(){
