@@ -77,5 +77,12 @@ public class MobileUserController {
     public String deleteAllUsers(){
         return mobileCustomerService.deleteAllUsers();
     }
+
+    @GetMapping("/findlastuuid")
+    public Map<String, Object> findLastUUID(){
+        Map<String, Object> newestUUID = mobileCustomerService.findNewestUUID();
+        System.out.println(newestUUID);
+        return newestUUID;
+    }
 }
 
