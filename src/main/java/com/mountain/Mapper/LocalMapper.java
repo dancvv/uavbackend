@@ -26,4 +26,7 @@ public interface LocalMapper extends BaseMapper<Location> {
 
     @Select("select count(*) from location where mobileid like 'depot%'")
     int existDepot();
+
+    @Select("select * from location where name_id = #{index}")
+    Location findLocationByIndex(int index);
 }

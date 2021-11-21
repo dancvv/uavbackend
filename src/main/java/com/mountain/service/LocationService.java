@@ -35,6 +35,7 @@ public interface LocationService extends IService<Location> {
     Map<String, Object> findStaticRoutes(int vehicleNum);
     void deleteAllLocation();
     int existDepot();
+    Map<String,Object> findLocationsById(Map<Object, ArrayList<Integer>> routeList);
 
 
 }

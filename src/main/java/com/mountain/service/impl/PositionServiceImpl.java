@@ -65,7 +65,14 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         // Print solution on console.
         return solution;
     }
-//    VRP路线规划
+
+    /**
+     * VRP路线规划
+     * @param distanceMatrix 距离矩阵
+     * @param vehicleNumber 无人机数量
+     * @param depot 起始站点
+     * @return 路线数据
+     */
     @Override
     public Map<Object, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
 //        System.load("/home/ubuntu/.m2/repository/com/google/ortools/ortools-linux-x86-64/9.0.9048/linux-x86-64/libjniortools.so");
@@ -239,10 +246,13 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         int exist = localMapper.existDepot();
         System.out.println("---------------------------");
         System.out.println(exist);
-        if ( exist==0){
-            infoMap.put("msg","未添加仓库坐标");
+        if ( exist==0 || vehicleNum <=0 ){
+            infoMap.put("msg","未添加仓库坐标或无人机数量必须大于1");
+            infoMap.put("status",400);
         }else{
-            int depot = localMapper.findIndexByName("depot 0");
+//            mysql从1开始计数
+            int depot = localMapper.findIndexByName("depot 0") - 1;
+            System.out.println("depot : "+depot);
             if (userList.size() <= 2) {
                 infoMap.put("msg", "服务器中资源不足，添加数据");
                 infoMap.put("status", 404);
@@ -257,7 +267,8 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
     //        根据计算出来的矩阵开始调用后端计算
     //        路线长度，车辆数量，车站数量
                 Map<Object, ArrayList<Integer>> routeList = planCompute(distanceMatrix, vehicleNum, depot);
-                infoMap.put("results", routeList);
+                Map<String, Object> locationsById = findLocationsById(routeList);
+                infoMap.put("results", locationsById);
             }
         }
         return infoMap;
@@ -271,9 +282,35 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
         localMapper.deleteAllLocations();
     }
 
+    /**
+     * 确认是否存在起始站点
+     * @return
+     */
     @Override
     public int existDepot() {
         return localMapper.existDepot();
+    }
+
+    @Override
+    public Map<String,Object> findLocationsById(Map<Object, ArrayList<Integer>> routeList) {
+        Map<String,Object> routeMap = new HashMap<>();
+        routeList.forEach((k,v) -> {
+            if (k instanceof Integer){
+                List<Map<String,Object>> detailRoute = new ArrayList<>();
+                for (int element:v){
+                    Map<String,Object> locationMap = new HashMap<>();
+                    Double[] latlng = new Double[2];
+                    Location byIndex = localMapper.findLocationByIndex(element+1);
+                    locationMap.put("mobileid",byIndex.getMobileid());
+                    latlng[0] = byIndex.getLat();
+                    latlng[1] = byIndex.getLng();
+                    locationMap.put("location",latlng);
+                    detailRoute.add(locationMap);
+                }
+                routeMap.put(k.toString(),detailRoute);
+            }
+        });
+        return routeMap;
     }
 
 
