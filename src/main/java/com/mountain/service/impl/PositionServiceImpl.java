@@ -308,6 +308,8 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
                     detailRoute.add(locationMap);
                 }
                 routeMap.put(k.toString(),detailRoute);
+            }else {
+                routeMap.put(k.toString(),v);
             }
         });
         return routeMap;
