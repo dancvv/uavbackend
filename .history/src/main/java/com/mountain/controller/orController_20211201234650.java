@@ -173,7 +173,7 @@ public class orController {
         return positionService.findUnservedUsers();
     }
     /**
-     * 路线规划算法
+     * 查找动态用户
      * @param vehicleNum
      * @return
      */

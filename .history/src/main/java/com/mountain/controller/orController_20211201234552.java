@@ -172,11 +172,7 @@ public class orController {
     public int[] findUnservedUsers(){
         return positionService.findUnservedUsers();
     }
-    /**
-     * 路线规划算法
-     * @param vehicleNum
-     * @return
-     */
+    /
     @PostMapping("findStaticRoutes")
     public Map<String, Object> findStaticRoutes(@RequestParam int vehicleNum){
         // System.out.println(vehicleNum);
