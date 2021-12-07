@@ -30,4 +30,5 @@ public interface MobileCustomerService {
     void setOneUserLogicStatus(String userId, LocalDateTime moveTimeStamp, GeoJsonPoint jsonPoint);
     Map<String,Object> findNewestUUID();
     Boolean existDepot();
+    Map<String,Object> exitUUID(String uuid);
 }

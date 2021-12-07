@@ -68,21 +68,46 @@ public class MobileUserController {
     public Map<Object, Object> queryAndUpdateLocation(@RequestParam String uuid){
         return mobileCustomerService.queryAndUpdateLocation(uuid);
     }
-//    根据文档id查询,并将所有用户的logic状态更新为废弃状态2
+
+    /**
+     * 根据文档id查询,并将所有用户的logic状态更新为废弃状态2
+     * @param userId 用户id
+     * @param uuid 当前用户批次
+     * @return 返回查询结果
+     */
     @GetMapping("/setlogicsta")
     public UpdateResult updateLogicStaById(@RequestParam String userId,@RequestParam String uuid){
         return mobileCustomerService.updateOneUsersLogicStatus(userId,uuid);
     }
+
+    /**
+     * 删除所有用户
+     * @return 返回删除结果
+     */
     @DeleteMapping("/deleteall")
     public String deleteAllUsers(){
         return mobileCustomerService.deleteAllUsers();
     }
 
+    /**
+     * 查询出最近用户的UUID
+     * @return 返回最新用户的uuid
+     */
     @GetMapping("/findlastuuid")
     public Map<String, Object> findLastUUID(){
         Map<String, Object> newestUUID = mobileCustomerService.findNewestUUID();
         System.out.println(newestUUID);
         return newestUUID;
+    }
+
+    /**
+     * 查询是否存在这一个用户批次
+     * @param uuid 唯一用户
+     * @return 信息
+     */
+    @PostMapping("/existuuid")
+    public Map<String,Object> exitUUID(@RequestParam String uuid){
+        return mobileCustomerService.exitUUID(uuid);
     }
 }
 

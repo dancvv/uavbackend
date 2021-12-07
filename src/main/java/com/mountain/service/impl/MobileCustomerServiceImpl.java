@@ -335,7 +335,6 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         return megMap;
     }
 
-
     /**
      * 查找仓库对象是否存在
      */
@@ -344,5 +343,21 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
         Query query = new Query(Criteria.where("mobileId").is("depot 0"));
         return mongoTemplate.exists(query, MobileCustomer.class);
     }
+
+    @Override
+    public Map<String, Object> exitUUID(String uuid) {
+        Map<String,Object> msgMap = new HashMap<>();
+        Query query = new Query(Criteria.where("uuid").is(uuid));
+        boolean exists = mongoTemplate.exists(query, MobileCustomer.class);
+        if (exists){
+            msgMap.put("msg","success");
+            msgMap.put("status","200");
+        }else {
+            msgMap.put("msg","error");
+            msgMap.put("status","400");
+        }
+        return msgMap;
+    }
+
 
 }
