@@ -76,8 +76,8 @@ public class PositionServiceImpl extends ServiceImpl<LocalMapper, Location> impl
     @Override
     public Map<Object, ArrayList<Integer>> planCompute(Long[][] distanceMatrix, Integer vehicleNumber, Integer depot){
 //        部署专用代码
-        System.load("/home/ubuntu/.m2/repository/com/google/ortools/ortools-linux-x86-64/9.0.9048/linux-x86-64/libjniortools.so");
-//        Loader.loadNativeLibraries();
+//        System.load("/home/ubuntu/.m2/repository/com/google/ortools/ortools-linux-x86-64/9.0.9048/linux-x86-64/libjniortools.so");
+        Loader.loadNativeLibraries();
 
         // Create Routing Index Manag er
         RoutingIndexManager manager =

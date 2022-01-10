@@ -14,6 +14,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CommonUtilsServiceImpl implements CommonUtilsService {
+    /**
+     * 计算距离
+     * @param source
+     * @param target
+     * @param ellipsoid
+     * @return 返回两个点之间的距离
+     */
     @Override
     public double calculateGeoPointsDistance(GlobalCoordinates source, GlobalCoordinates target, Ellipsoid ellipsoid) {
         GeodeticCurve geodeticCurve = new GeodeticCalculator().calculateGeodeticCurve(ellipsoid, source, target);

@@ -4,7 +4,7 @@ import org.gavaghan.geodesy.Ellipsoid;
 import org.gavaghan.geodesy.GlobalCoordinates;
 
 /**
- * @description:
+ * @description: 公共服务类
  * @author: mountainINblack
  * @date: 2021/11/6 16:21
  */
