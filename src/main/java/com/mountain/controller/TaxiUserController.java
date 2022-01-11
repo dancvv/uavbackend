@@ -20,7 +20,8 @@ public class TaxiUserController {
 
     @GetMapping("/getLocation")
     public List<TaxiUsers> getLocation() {
+        List<TaxiUsers> allLocations = taxiUserService.getAllLocations();
         // System.out.println(allLocations);
-        return taxiUserService.getAllLocations();
+        return allLocations;
     }
 }
