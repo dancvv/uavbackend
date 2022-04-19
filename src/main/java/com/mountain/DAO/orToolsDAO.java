@@ -4,8 +4,8 @@ import com.google.ortools.constraintsolver.*;
 import com.mountain.entity.Location;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
-import java.util.logging.Logger;
+//import java.util.*;
+//import java.util.logging.Logger;
 
 @Repository
 public class orToolsDAO {
