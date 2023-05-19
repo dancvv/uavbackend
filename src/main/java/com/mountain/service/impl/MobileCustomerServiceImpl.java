@@ -2,8 +2,10 @@ package com.mountain.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
 import com.mountain.DAO.MobileCustomerRepository;
+import com.mountain.Mapper.LocalMapper;
 import com.mountain.entity.AggrMobileResults;
 import com.mountain.entity.CustomerLocation;
+import com.mountain.entity.Location;
 import com.mountain.entity.MobileCustomer;
 import com.mountain.service.MobileCustomerService;
 import org.bson.Document;
@@ -41,6 +43,8 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
     private MongoTemplate mongoTemplate;
     @Autowired
     private CommonUtilsServiceImpl commonUtilsService;
+    @Autowired
+    private LocalMapper localMapper;
     @Override
     public Map<String,Object> insertMobileUsers(MobileCustomer mobileCustomer) {
         Map<String,Object> megMap = new HashMap<>();
@@ -357,6 +361,12 @@ public class MobileCustomerServiceImpl implements MobileCustomerService {
             msgMap.put("status","400");
         }
         return msgMap;
+    }
+
+    @Override
+    public List<Location> findAllUserAndDepot() {
+        List<Location> all = localMapper.findAllUserAndDepot();
+        return all;
     }
 
 

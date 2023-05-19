@@ -2,6 +2,7 @@ package com.mountain.controller;
 
 import com.mongodb.client.result.UpdateResult;
 import com.mountain.entity.CustomerLocation;
+import com.mountain.entity.Location;
 import com.mountain.entity.MobileCustomer;
 import com.mountain.service.impl.MobileCustomerServiceImpl;
 
@@ -122,5 +123,11 @@ public class MobileUserController {
     @PostMapping("/existuuid")
     public Map<String, Object> exitUUID(@RequestParam String uuid) {
         return mobileCustomerService.exitUUID(uuid);
+    }
+
+    @GetMapping("/findAll")
+    public List<Location> findAll(){
+        List<Location> all = mobileCustomerService.findAllUserAndDepot();
+        return all;
     }
 }

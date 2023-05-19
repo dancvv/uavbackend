@@ -2,6 +2,7 @@ package com.mountain.service;
 
 import com.mongodb.client.result.UpdateResult;
 import com.mountain.entity.CustomerLocation;
+import com.mountain.entity.Location;
 import com.mountain.entity.MobileCustomer;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
@@ -31,4 +32,6 @@ public interface MobileCustomerService {
     Map<String,Object> findNewestUUID();
     Boolean existDepot();
     Map<String,Object> exitUUID(String uuid);
+
+    List<Location> findAllUserAndDepot();
 }
